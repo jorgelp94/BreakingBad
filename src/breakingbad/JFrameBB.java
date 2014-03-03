@@ -65,6 +65,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
     private boolean activaSonido;
     private boolean presionaG;
     private boolean presionaC;
+    private boolean presionaEnter; // Al presionar enter empieza el juego
     private int velocI;
     private double t;
     private double gravedad;
@@ -111,6 +112,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
         ladoDer = false;
         presionaG = false;
         presionaC = false;
+        presionaEnter = false;
         activaSonido = true; // El sonido esta activado al iniciar el juego
         tP = .1;
         //Se cargan los sonidos.
@@ -405,6 +407,11 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
             } else {
                 presionaC = true;
             }
+        }
+        
+        // Tecla para iniciar el juego
+        if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+            presionaEnter = true;
         }
     }
 
