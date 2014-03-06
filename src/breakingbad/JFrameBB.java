@@ -79,6 +79,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
     private Vector vec;    // Objeto vector para agregar el puntaje.
     private String[] arr;  //array para obtener lo guardado
     private ImageIcon fondo;
+    private ImageIcon inicial;
     private double tP;
 
     /**
@@ -97,8 +98,11 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
         bola = new Bola(0, 500);
         barra = new Barra(getWidth() / 2, getHeight() - 80);
 
-        URL tURL = this.getClass().getResource("images/images.jpg");
-        fondo = new ImageIcon(Toolkit.getDefaultToolkit().getImage(tURL));
+        URL tURL = this.getClass().getResource("images/imagen_fondo.jpg");
+        URL tURL2 = this.getClass().getResource("images/wallpaper_inicio.png");
+        fondo = new ImageIcon(Toolkit.getDefaultToolkit().getImage(tURL)); //imagen de fondo al iniciar juego
+        inicial = new ImageIcon(Toolkit.getDefaultToolkit().getImage(tURL2)); // imagen de fondo antes de inicial el juego
+        
         addKeyListener(this);
         addMouseListener(this);
 
