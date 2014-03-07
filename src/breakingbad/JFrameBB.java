@@ -48,7 +48,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
     private Image dbImage;    // Imagen a proyectar
     private Image gameover;    //Imagen a desplegar al acabar el juego.	 
     private Graphics dbg;	// Objeto grafico
-    private SoundClip sonido;    // Objeto SoundClip
+    private SoundClip musicaInicio;    // Objeto SoundClip
     private SoundClip anota;    // Objeto SoundClip
     private SoundClip bomb;    //Objeto SoundClip 
     private Bola bola;    // Objeto de la clase Balon
@@ -123,6 +123,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
 
         bomb = new SoundClip("sounds/Explosion.wav");
         anota = new SoundClip("sounds/Cheering.wav");
+        musicaInicio = new SoundClip("sounds/musica_inicio.wav");
         velocI = (int) (Math.random() * (112 - 85)) + 85; //85 a 112
         t = .15;
         URL goURL = this.getClass().getResource("images/gameover.jpg");

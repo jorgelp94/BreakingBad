@@ -17,6 +17,8 @@ public class BreakingBad {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        JFrameBB holaMundo = new JFrameBB();
+        holaMundo.setVisible(true);
     }
     
 }
