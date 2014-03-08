@@ -329,10 +329,10 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
             }
         }
         //checa si la bola esta dentro del applet
-        if(bola.getPosY()<0){
+        if(bola.getPosY()<20){
             moveA=true;
         }
-        if(bola.getPosX()>getWidth()){
+        if(bola.getPosX()>getWidth()-20){
             moveL=false;
         }
         if(bola.getPosX()<0){
@@ -478,6 +478,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
      * @param e es el <code>evento</code> que se genera en al soltar las teclas.
      */
     public void keyReleased(KeyEvent e) {
+        direccion=0;
     }
 
     /**
