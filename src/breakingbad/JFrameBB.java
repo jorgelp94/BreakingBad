@@ -78,8 +78,8 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
     private String nombreArchivo;    //Nombre del archivo.
     private Vector vec;    // Objeto vector para agregar el puntaje.
     private String[] arr;  //array para obtener lo guardado
-    private ImageIcon fondo;
-    private ImageIcon inicial;
+    private Image fondo;
+    private Image inicial;
     private double tP;
 
     /**
@@ -100,8 +100,8 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
 
         URL tURL = this.getClass().getResource("images/imagen_fondo.jpg");
         URL tURL2 = this.getClass().getResource("images/wallpaper_inicio.png");
-        fondo = new ImageIcon(Toolkit.getDefaultToolkit().getImage(tURL)); //imagen de fondo al iniciar juego
-        inicial = new ImageIcon(Toolkit.getDefaultToolkit().getImage(tURL2)); // imagen de fondo antes de inicial el juego
+        fondo = Toolkit.getDefaultToolkit().getImage(tURL); //imagen de fondo al iniciar juego
+        inicial = Toolkit.getDefaultToolkit().getImage(tURL2); // imagen de fondo antes de inicial el juego
         
         addKeyListener(this);
         addMouseListener(this);
@@ -123,7 +123,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
 
         bomb = new SoundClip("sounds/Explosion.wav");
         anota = new SoundClip("sounds/Cheering.wav");
-        musicaInicio = new SoundClip("sounds/musica_inicio.wav");
+        musicaInicio = new SoundClip("sounds/musica_inicio2.wav");
         velocI = (int) (Math.random() * (112 - 85)) + 85; //85 a 112
         t = .15;
         URL goURL = this.getClass().getResource("images/gameover.jpg");
@@ -304,7 +304,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
             bola.setPosY(500);
             t = .15;
             if (activaSonido) {
-                bomb.play();
+                musicaInicio.play();
             }
             caidas++; //Cuenta cuando hay una caida
             if (caidas == 3) {
@@ -510,7 +510,11 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
      * @param g es el <code>objeto grafico</code> usado para dibujar.
      */
     public void paint1(Graphics g) {
-//          g.drawImage(fondo.getImage(), 0, 0,1300,700, this);
+        if (!presionaEnter) {
+            g.drawImage(inicial, 0, 0, this);
+            musicaInicio.play();
+        } else {
+            //          g.drawImage(fondo.getImage(), 0, 0,1300,700, this);
         g.setFont(new Font("default", Font.BOLD, 16));
         g.setColor(Color.RED);
         if (vidas > 0) {
@@ -560,6 +564,8 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
             g.drawString("Antonio Mejorado", getWidth() / 4 + getWidth() / 8, 280);
                     
         }
+        }
+
     }
 
     /**
@@ -812,21 +818,21 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
     public void setArr(String[] arr) {
         this.arr = arr;
     }
-
+    
     /**
      * @return the fondo
      */
-    public ImageIcon getFondo() {
-        return fondo;
-    }
+    //public ImageIcon getFondo() {
+    //    return fondo;
+    //}
 
     /**
      * @param fondo the fondo to set
      */
-    public void setFondo(ImageIcon fondo) {
-        this.fondo = fondo;
-    }
-
+    //public void setFondo(ImageIcon fondo) {
+    //    this.fondo = fondo;
+    //}
+    
     /**
      * @return the tP
      */
