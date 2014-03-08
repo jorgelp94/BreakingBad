@@ -304,7 +304,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
             bola.setPosY(500);
             t = .15;
             if (activaSonido) {
-                musicaInicio.play();
+                bomb.play();
             }
             caidas++; //Cuenta cuando hay una caida
             if (caidas == 3) {
@@ -512,6 +512,9 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
     public void paint1(Graphics g) {
         if (!presionaEnter) {
             g.drawImage(inicial, 0, 0, this);
+            g.setFont(new Font("defalut", Font.BOLD, 16));
+            g.setColor(Color.white);
+            g.drawString("Presiona ENTER para iniciar el juego",175 ,350 );
             musicaInicio.play();
         } else {
             //          g.drawImage(fondo.getImage(), 0, 0,1300,700, this);
