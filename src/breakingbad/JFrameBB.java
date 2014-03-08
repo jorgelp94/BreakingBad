@@ -81,6 +81,9 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
     private Image fondo;
     private Image inicial;
     private double tP;
+    private boolean moveL;
+    private boolean moveA;
+    private LinkedList<Meth> methList;
 
     /**
      * Metodo <I>init</I> sobrescrito de la clase
@@ -97,15 +100,48 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
         vidas = 5;    // Le asignamos un valor inicial a las vidas
         bola = new Bola(0, 500);
         barra = new Barra(getWidth() / 2, getHeight() - 80);
-
+        methList= new LinkedList<Meth>();
         URL tURL = this.getClass().getResource("images/imagen_fondo.jpg");
         URL tURL2 = this.getClass().getResource("images/wallpaper_inicio.png");
         fondo = Toolkit.getDefaultToolkit().getImage(tURL); //imagen de fondo al iniciar juego
         inicial = Toolkit.getDefaultToolkit().getImage(tURL2); // imagen de fondo antes de inicial el juego
+        //cargar los enemegios (meth)
+        int x;
+        int y;
         
+        int l = 0;
+        int t2 = 0;
+        int s = 0;
+        for (int i = 0; i < 15 ; i++) {
+            
+            if (i < 5){
+                
+                x = (int) ((getWidth()/6) + l - 17);    //posision x es tres cuartos del applet
+                y =  100 ;    //posision y es tres cuartos del applet
+                methList.add(new Meth(x,y));
+                l += (int)(getWidth() / 6);
+            }
+
+            if (i > 4 && i < 10){
+               
+                x = (int) ((getWidth()/6) + t2 - 17);    //posision x es tres cuartos del applet
+                y =  200;    //posision y es tres cuartos del applet
+                methList.add(new Meth(x,y));
+                t2 += (int)(getWidth() / 6);
+            }
+            
+            if (i > 9 ){
+               
+                x = (int) ((getWidth()/6) + s - 17);    //posision x es tres cuartos del applet
+                y =  300;    //posision y es tres cuartos del applet
+                methList.add(new Meth(x,y));
+                s += (int)(getWidth() / 6);
+            }
+        }
         addKeyListener(this);
         addMouseListener(this);
-
+        moveL = true;
+        moveA= false;
         nombreArchivo = "Puntaje.txt";
         vec = new Vector();
         caidas = 0;
@@ -125,7 +161,6 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
         anota = new SoundClip("sounds/Cheering.wav");
         musicaInicio = new SoundClip("sounds/musica_inicio2.wav");
         velocI = (int) (Math.random() * (112 - 85)) + 85; //85 a 112
-        t = .15;
         URL goURL = this.getClass().getResource("images/gameover.jpg");
         gameover = Toolkit.getDefaultToolkit().getImage(goURL);
         start();
@@ -193,33 +228,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
     public void actualiza() {
         //Dependiendo de la direccion del elefante es hacia donde se mueve.
         if (!isPause() && !presionaI) {
-            switch (direccion) {
-                case 3: {
-                    if (!ladoIzq && bolaMove) {
-                        barra.setPosX(barra.getPosX() - 4);
-                        break;    //se mueve hacia izquierda
-                    }
-
-                }
-                case 4: {
-                    if (!ladoDer && bolaMove) {
-                        barra.setPosX(barra.getPosX() + 4);
-                        break;    //se mueve hacia derecha
-                    }
-                }
-            }
-
-            //Checa que el jugador no se salga del applet  
-            if (barra.getAncho() + barra.getPosX() >= getWidth()) {
-                ladoDer = true;
-            } else {
-                ladoDer = false;
-            }
-            if (barra.getPosX() <= getWidth() / 2) {
-                ladoIzq = true;
-            } else {
-                ladoIzq = false;
-            }
+                    
             try {
                 if (presionaC) {
                     leeArchivo();    //lee el contenido del archivo 
@@ -234,27 +243,33 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
                 System.out.println("Error en " + e.toString());
             }
             if (bolaMove) {
+                switch (direccion) {
+                case 3: {
+                        barra.setPosX(barra.getPosX() - 4);
+                        break;    //se mueve hacia izquierda
+                }
+                case 4: {
+                    if (!ladoDer && bolaMove) {
+                        barra.setPosX(barra.getPosX() + 4);
+                        break;    //se mueve hacia derecha
+                    }
+                }
+            }    
+                if(moveL) bola.setPosX(bola.getPosX()+2);
+                else
+                    bola.setPosX(bola.getPosX()-2);
+                if(moveA) bola.setPosY(bola.getPosY()+2);
+                else bola.setPosY(bola.getPosY()-2);
                 //Guarda el tiempo actual
 
                 long tiempoTranscurrido =
                         System.currentTimeMillis() - getTiempoActual();
                 setTiempoActual(getTiempoActual() + tiempoTranscurrido);
-                setAnguloRadianes(45);
-                setCos(Math.cos(getAnguloRadianes()));
-                setSin(Math.sin(getAnguloRadianes()));
-                int x = (int) (velocI * getCos() * t);
-                int y = (int) ((velocI * sin * t) - (.5 * gravedad * t * t));
-                bola.setPosX(x);
-                bola.setPosY(-y + 500);
-                System.out.println("cos: " + cos + " " + " sin: " + sin + " tiempo: " + t);
-                System.out.println("x: " + x + " " + " y: " + y);
-                System.out.println("Velocidad: " + velocI);
-
-
-                //Actualiza la animaciÃ³n en base al tiempo transcurrido
                 bola.actualiza(tiempoTranscurrido);
                 barra.actualiza(tiempoTranscurrido);
-                t = t + tP;
+                for(Meth a: methList)
+                    a.actualiza(tiempoActual);
+//                t = t + tP;
             }
         }
     }
@@ -299,10 +314,10 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
         //velocI = (int)(Math.random()*(112-85)) + 85;
         if (bola.getPosY() > getHeight()) {
             bolaMove = false;
-            velocI = (int) (Math.random() * (112 - 85)) + 85; //85 a 112
+//            velocI = (int) (Math.random() * (112 - 85)) + 85; //85 a 112
             bola.setPosX(0);
             bola.setPosY(500);
-            t = .15;
+//            t = .15;
             if (activaSonido) {
                 bomb.play();
             }
@@ -313,17 +328,39 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
                 caidas = 0;
             }
         }
+        //checa si la bola esta dentro del applet
+        if(bola.getPosY()<0){
+            moveA=true;
+        }
+        if(bola.getPosX()>getWidth()){
+            moveL=false;
+        }
+        if(bola.getPosX()<0){
+            moveL=true;
+        }
 
-        if (bola.intersecta(barra)) {
-            velocI = (int) (Math.random() * (112 - 85)) + 85; //85 a 112
-            if (activaSonido) {
-                anota.play();
+        //checa que la barra este dentro del applet
+        if(barra.getPosX()<0){
+            direccion=0;
+        }
+        if(barra.getPosX()>getWidth()-barra.getPerimetro().getWidth())
+            direccion=0;
+        for(Meth a: methList){
+            if(bola.intersecta(a) && a.isExist()){
+                a.setExist(false);
+                score = score + 2;
             }
-            bolaMove = false;
-            bola.setPosX(0);
-            bola.setPosY(500);
-            t = .15;
-            score = score + 2;
+        }
+        if (bola.intersecta(barra)) {
+            moveA=false;
+//            velocI = (int) (Math.random() * (112 - 85)) + 85; //85 a 112
+//            if (activaSonido) {
+//                anota.play();
+//            }
+//            bolaMove = false;
+//            bola.setPosX(0);
+//            bola.setPosY(500);
+//            t = .15;
         }
 
     }
@@ -526,6 +563,9 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
                 g.drawImage(bola.getImagenI(), bola.getPosX(), bola.getPosY(), this);
                 //Dibuja la imagen en la posicion actualizada
                 g.drawImage(barra.getImagenI(), barra.getPosX(), barra.getPosY(), this);
+                for(Meth a: methList){
+                   if(a.isExist())  g.drawImage(a.getImagenI(), a.getPosX(), a.getPosY(), this);
+                }
 //                g.drawString("Puntos : " + list.get(0).getNum(), 10, 10);
                 //Muestra las vidas
                 g.drawString("Vidas: " + vidas, getWidth() / 2 - 10, 80);
@@ -848,5 +888,47 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
      */
     public void settP(double tP) {
         this.tP = tP;
+    }
+
+    /**
+     * @return the moveL
+     */
+    public boolean isMoveL() {
+        return moveL;
+    }
+
+    /**
+     * @param moveL the moveL to set
+     */
+    public void setMoveL(boolean moveL) {
+        this.moveL = moveL;
+    }
+
+    /**
+     * @return the moveA
+     */
+    public boolean isMoveA() {
+        return moveA;
+    }
+
+    /**
+     * @param moveA the moveA to set
+     */
+    public void setMoveA(boolean moveA) {
+        this.moveA = moveA;
+    }
+
+    /**
+     * @return the methList
+     */
+    public LinkedList<Meth> getMethList() {
+        return methList;
+    }
+
+    /**
+     * @param methList the methList to set
+     */
+    public void setMethList(LinkedList<Meth> methList) {
+        this.methList = methList;
     }
 }
