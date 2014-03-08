@@ -314,6 +314,8 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
         //velocI = (int)(Math.random()*(112-85)) + 85;
         if (bola.getPosY() > getHeight()) {
             bolaMove = false;
+            moveA=false;
+            moveL=true;
 //            velocI = (int) (Math.random() * (112 - 85)) + 85; //85 a 112
             bola.setPosX(0);
             bola.setPosY(500);
@@ -321,12 +323,8 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
             if (activaSonido) {
                 bomb.play();
             }
-            caidas++; //Cuenta cuando hay una caida
-            if (caidas == 3) {
-                tP += .05;
-                vidas--;// se resta una vida cuando el bola cae 3 veces
-                caidas = 0;
-            }
+            vidas--;// se resta una vida cuando el bola cae
+                
         }
         //checa si la bola esta dentro del applet
         if(bola.getPosY()<20){
