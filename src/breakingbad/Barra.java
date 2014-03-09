@@ -24,7 +24,8 @@ public class Barra extends Base{
     public Barra(int posX, int posY) {
         super(posX, posY);
 //        Image jugador1 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/jugador1.gif"));
-	Image jugador2 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/jugador2.gif"));
+	Image barra = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/barra1.png"));
+        /*
 	Image jugador3 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/jugador3.gif"));
         Image jugador4 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/jugador4.gif"));
 	Image jugador5 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/jugador5.gif"));
@@ -33,12 +34,13 @@ public class Barra extends Base{
 	Image jugador8 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/jugador8.gif"));
 	Image jugador9 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/jugador9.gif"));
         Image jugador10 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/jugador10.gif"));
-	
+	*/
         
         //Se inicializa la animación
         anim = new Animacion();
 //	anim.sumaCuadro(jugador1, 100);
-	anim.sumaCuadro(jugador2, 100);
+	anim.sumaCuadro(barra, 100);
+        /*
 	anim.sumaCuadro(jugador3, 100);
         anim.sumaCuadro(jugador4, 100);
         anim.sumaCuadro(jugador5, 100);
@@ -47,6 +49,7 @@ public class Barra extends Base{
         anim.sumaCuadro(jugador8, 100);
         anim.sumaCuadro(jugador9, 100);
         anim.sumaCuadro(jugador10, 100);
+        */
         conteo++;
     }
     

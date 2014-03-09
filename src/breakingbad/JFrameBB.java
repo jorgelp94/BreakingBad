@@ -51,6 +51,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
     private SoundClip musicaInicio;    // Objeto SoundClip
     private SoundClip anota;    // Objeto SoundClip
     private SoundClip bomb;    //Objeto SoundClip 
+    private SoundClip point;  //Objeto SoundClip
     private Bola bola;    // Objeto de la clase Balon
     private Barra barra; //Objeto de la clase Anotacion
     //Variables de control de tiempo de la animaciÃ³n
@@ -80,6 +81,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
     private String[] arr;  //array para obtener lo guardado
     private Image fondo;
     private Image inicial;
+    private Image won;
     private double tP;
     private boolean moveL;
     private boolean moveA;
@@ -97,14 +99,18 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
         this.setSize(1300, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setPause(false);
-        vidas = 5;    // Le asignamos un valor inicial a las vidas
-        bola = new Bola(0, 500);
-        barra = new Barra(getWidth() / 2, getHeight() - 80);
+        vidas = 1;    // Le asignamos un valor inicial a las vidas
+        barra = new Barra(getWidth() / 5, getHeight() - 38);
+        bola = new Bola(barra.getAncho()/2 + getWidth()/5, getHeight() - 63);
         methList= new LinkedList<Meth>();
         URL tURL = this.getClass().getResource("images/imagen_fondo.jpg");
         URL tURL2 = this.getClass().getResource("images/wallpaper_inicio.png");
+        URL tURL3 = this.getClass().getResource("images/Uwon.png");
+        URL tURL4 = this.getClass().getResource("images/Ulost.png");
         fondo = Toolkit.getDefaultToolkit().getImage(tURL); //imagen de fondo al iniciar juego
         inicial = Toolkit.getDefaultToolkit().getImage(tURL2); // imagen de fondo antes de inicial el juego
+        won = Toolkit.getDefaultToolkit().getImage(tURL3); //imagen cuando ganas
+        gameover = Toolkit.getDefaultToolkit().getImage(tURL4); //imagen cuando pierdes
         //cargar los enemegios (meth)
         int x;
         int y;
@@ -157,12 +163,12 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
         tP = .1;
         //Se cargan los sonidos.
 
-        bomb = new SoundClip("sounds/Explosion.wav");
+        bomb = new SoundClip("sounds/drop.wav");
         anota = new SoundClip("sounds/Cheering.wav");
-        musicaInicio = new SoundClip("sounds/musica_inicio2.wav");
+        musicaInicio = new SoundClip("sounds/Videogame.wav");
+        point = new SoundClip("sounds/Jump.wav");
         velocI = (int) (Math.random() * (112 - 85)) + 85; //85 a 112
-        URL goURL = this.getClass().getResource("images/gameover.jpg");
-        gameover = Toolkit.getDefaultToolkit().getImage(goURL);
+        
         start();
     }
 
@@ -192,7 +198,11 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
      *
      */
     public void run() {
-        while (vidas > 0) {
+        if (!presionaEnter) {
+            musicaInicio.play();
+        }
+
+        while (vidas > 0) { // entra hasta que el score es 30
             actualiza();
             checaColision();
 
@@ -245,8 +255,10 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
             if (bolaMove) {
                 switch (direccion) {
                 case 3: {
-                        barra.setPosX(barra.getPosX() - 4);
-                        break;    //se mueve hacia izquierda
+                        if (!ladoIzq && bolaMove) {
+                            barra.setPosX(barra.getPosX() - 4);
+                            break;    //se mueve hacia izquierda
+                        }
                 }
                 case 4: {
                     if (!ladoDer && bolaMove) {
@@ -255,6 +267,18 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
                     }
                 }
             }    
+                // Checa que la barra no se salga del frame
+                if (barra.getAncho() + barra.getPosX() >= getWidth()) {
+                    ladoDer = true;
+                 } else {
+                     ladoDer = false;
+                 }
+                 if (barra.getPosX() <= 0) {
+                        ladoIzq = true;
+                 } else {
+                        ladoIzq = false;
+                 }
+                
                 if(moveL) bola.setPosX(bola.getPosX()+2);
                 else
                     bola.setPosX(bola.getPosX()-2);
@@ -317,8 +341,10 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
             moveA=false;
             moveL=true;
 //            velocI = (int) (Math.random() * (112 - 85)) + 85; //85 a 112
-            bola.setPosX(0);
-            bola.setPosY(500);
+            
+            // la bola se posiciona encima de la barra
+            bola.setPosX(barra.getPosX() + barra.getAncho()/2);
+            bola.setPosY(barra.getPosY() - 25);
 //            t = .15;
             if (activaSonido) {
                 bomb.play();
@@ -347,6 +373,9 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
             if(bola.intersecta(a) && a.isExist()){
                 a.setExist(false);
                 score = score + 2;
+                if (activaSonido) {
+                    point.play();
+                }
             }
         }
         if (bola.intersecta(barra)) {
@@ -453,6 +482,10 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
         if(e.getKeyCode() == KeyEvent.VK_ENTER) {
             presionaEnter = true;
         }
+        // Tecla para que la bola se mueva
+        if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+            setBolaMove(true);
+        }
     }
 
     /**
@@ -488,9 +521,9 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
      * click.
      */
     public void mousePressed(MouseEvent e) {
-        if (bola.getPerimetro().contains(e.getPoint())) {
-            setBolaMove(true);
-        }
+        //if (bola.getPerimetro().contains(e.getPoint())) {
+         //   setBolaMove(true);
+        //}
     }
 
     /**
@@ -547,17 +580,20 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
      */
     public void paint1(Graphics g) {
         if (!presionaEnter) {
-            g.drawImage(inicial, 0, 0, this);
-            g.setFont(new Font("defalut", Font.BOLD, 16));
+            g.drawImage(inicial, 0, 0, 1300, 700, this);
+            g.setFont(new Font("defalut", Font.BOLD, 32));
             g.setColor(Color.white);
-            g.drawString("Presiona ENTER para iniciar el juego",175 ,350 );
-            musicaInicio.play();
+            g.drawString("METH BREAKER", 518, 150);
+            g.setFont(new Font("defalut", Font.BOLD, 16));
+            g.drawString("Presiona ENTER para iniciar el juego",500 ,600 );
+            
         } else {
             //          g.drawImage(fondo.getImage(), 0, 0,1300,700, this);
         g.setFont(new Font("default", Font.BOLD, 16));
-        g.setColor(Color.RED);
+        g.setColor(Color.white);
         if (vidas > 0) {
             if (bola != null) {
+                g.drawImage(fondo, 0, 0, 1300, 700, this);
                 //Dibuja la imagen en la posicion actualizada
                 g.drawImage(bola.getImagenI(), bola.getPosX(), bola.getPosY(), this);
                 //Dibuja la imagen en la posicion actualizada
@@ -580,10 +616,10 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
                 if (presionaI) {
 
                     g.drawString("Instrucciones:", getWidth() / 4 + getWidth() / 8, 200);
-                    g.drawString("Mueve el jugador con las flechas del teclado", getWidth() / 4 + getWidth() / 8, 220);
-                    g.drawString("para que atrape el balon de americano. Cada vez", getWidth() / 4 + getWidth() / 8, 240);
-                    g.drawString("que es atrapado ganas dos puntos y si el balon", getWidth() / 4 + getWidth() / 8, 260);
-                    g.drawString("cae tres veces pierdes una vida.", getWidth() / 4 + getWidth() / 8, 280);
+                    g.drawString("Mueve la camioneta con las flechas del teclado", getWidth() / 4 + getWidth() / 8, 220);
+                    g.drawString("para que rebote la bola y destruya los objetos", getWidth() / 4 + getWidth() / 8, 240);
+                    g.drawString("azules (metanfetaminas).", getWidth() / 4 + getWidth() / 8, 260);
+                    
                     g.drawString("Teclas: ", getWidth() / 4 + getWidth() / 8, 300);
                     g.drawString("Flecha izquierda - se mueve a la izquierda", getWidth() / 4 + getWidth() / 8, 320);
                     g.drawString("Flecha derecha - se mueve a la derecha", getWidth() / 4 + getWidth() / 8, 340);
@@ -592,12 +628,19 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
                     g.drawString("C - carga el juego", getWidth() / 4 + getWidth() / 8, 400);
                     g.drawString("P - pausa el juego", getWidth() / 4 + getWidth() / 8, 420);
                     g.drawString("S - activa/desactiva el sonido del juego", getWidth() / 4 + getWidth() / 8, 440);
+                    g.drawString("SPACE - sale la bola", getWidth() / 4 + getWidth() / 8, 460);
                 }
             } else {
                 //Da un mensaje mientras se carga el dibujo	
                 g.drawString("No se cargo la imagen..", 20, 20);
             }
         } else {
+            g.drawImage(gameover, 0,0, 1300, 700, this);
+            g.setFont(new Font("defalut", Font.BOLD, 22));
+            g.setColor(Color.white);
+            g.drawString("GAME OVER", 500, 200);
+            g.drawString("Score: " +score, 650, 510);
+        }/*else {
             this.setBackground(Color.GRAY);
              g.drawString("    Creditos:", getWidth() / 4 + getWidth() / 8, 200);
             g.drawString("Luis Alberto Reyna", getWidth() / 4 + getWidth() / 8, 220);
@@ -605,8 +648,18 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
             g.drawString("     Colaboracion:", getWidth() / 4 + getWidth() / 8, 260);
             g.drawString("Antonio Mejorado", getWidth() / 4 + getWidth() / 8, 280);
                     
+        } */
+        
+        if (score == 30) {
+            g.setFont(new Font("defalut", Font.BOLD, 30));
+            g.setColor(Color.white);
+            g.drawImage(won, 0,0, 1300, 700, this);
+            g.drawString("CONGRATULATIONS!!!", 500, 150);
+            g.drawString("Score: " +score, 600, 530);
+            vidas = 0;
         }
-        }
+        
+       }
 
     }
 
