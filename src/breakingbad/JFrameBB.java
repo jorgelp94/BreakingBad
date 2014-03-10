@@ -164,7 +164,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
         //Se cargan los sonidos.
 
         bomb = new SoundClip("sounds/drop.wav");
-        anota = new SoundClip("sounds/Cheering.wav");
+        
         musicaInicio = new SoundClip("sounds/Videogame.wav");
         point = new SoundClip("sounds/Jump.wav");
         velocI = (int) (Math.random() * (112 - 85)) + 85; //85 a 112
