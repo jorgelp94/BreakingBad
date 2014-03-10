@@ -67,7 +67,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
     private boolean presionaG;
     private boolean presionaC;
     private boolean presionaEnter; // Al presionar enter empieza el juego
-    private int velocI;
+    private int y;
     private double t;
     private double gravedad;
     private double angulo;
@@ -82,10 +82,6 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
     private Image fondo;
     private Image inicial;
     private Image won;
-    private double tP;
-    private boolean moveL;
-    private boolean moveA;
-    private LinkedList<Meth> methList;
 
     /**
      * Metodo <I>init</I> sobrescrito de la clase
@@ -100,9 +96,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setPause(false);
         vidas = 1;    // Le asignamos un valor inicial a las vidas
-        barra = new Barra(getWidth() / 5, getHeight() - 38);
-        bola = new Bola(barra.getAncho()/2 + getWidth()/5, getHeight() - 63);
-        methList= new LinkedList<Meth>();
+        bola = new Bola(getWidth()/5, getHeight()/2);
         URL tURL = this.getClass().getResource("images/imagen_fondo.jpg");
         URL tURL2 = this.getClass().getResource("images/wallpaper_inicio.png");
         URL tURL3 = this.getClass().getResource("images/Uwon.png");
@@ -111,43 +105,9 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
         inicial = Toolkit.getDefaultToolkit().getImage(tURL2); // imagen de fondo antes de inicial el juego
         won = Toolkit.getDefaultToolkit().getImage(tURL3); //imagen cuando ganas
         gameover = Toolkit.getDefaultToolkit().getImage(tURL4); //imagen cuando pierdes
-        //cargar los enemegios (meth)
-        int x;
-        int y;
         
-        int l = 0;
-        int t2 = 0;
-        int s = 0;
-        for (int i = 0; i < 15 ; i++) {
-            
-            if (i < 5){
-                
-                x = (int) ((getWidth()/6) + l - 17);    //posision x es tres cuartos del applet
-                y =  100 ;    //posision y es tres cuartos del applet
-                methList.add(new Meth(x,y));
-                l += (int)(getWidth() / 6);
-            }
-
-            if (i > 4 && i < 10){
-               
-                x = (int) ((getWidth()/6) + t2 - 17);    //posision x es tres cuartos del applet
-                y =  200;    //posision y es tres cuartos del applet
-                methList.add(new Meth(x,y));
-                t2 += (int)(getWidth() / 6);
-            }
-            
-            if (i > 9 ){
-               
-                x = (int) ((getWidth()/6) + s - 17);    //posision x es tres cuartos del applet
-                y =  300;    //posision y es tres cuartos del applet
-                methList.add(new Meth(x,y));
-                s += (int)(getWidth() / 6);
-            }
-        }
         addKeyListener(this);
         addMouseListener(this);
-        moveL = true;
-        moveA= false;
         nombreArchivo = "Puntaje.txt";
         vec = new Vector();
         caidas = 0;
@@ -159,15 +119,17 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
         presionaG = false;
         presionaC = false;
         presionaEnter = false;
-        activaSonido = true; // El sonido esta activado al iniciar el juego
-        tP = .1;
+        activaSonido = true; // El sonido esta activado al iniciar el jueg
         //Se cargan los sonidos.
 
         bomb = new SoundClip("sounds/drop.wav");
         
         musicaInicio = new SoundClip("sounds/Videogame.wav");
         point = new SoundClip("sounds/Jump.wav");
-        velocI = (int) (Math.random() * (112 - 85)) + 85; //85 a 112
+        y = (int) (Math.random() * (getHeight() - 20)) + 20; //85 a 112
+        
+        barra = new Barra(getWidth(), y);
+        
         
         start();
     }
@@ -253,37 +215,9 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
                 System.out.println("Error en " + e.toString());
             }
             if (bolaMove) {
-                switch (direccion) {
-                case 3: {
-                        if (!ladoIzq && bolaMove) {
-                            barra.setPosX(barra.getPosX() - 4);
-                            break;    //se mueve hacia izquierda
-                        }
-                }
-                case 4: {
-                    if (!ladoDer && bolaMove) {
-                        barra.setPosX(barra.getPosX() + 4);
-                        break;    //se mueve hacia derecha
-                    }
-                }
-            }    
-                // Checa que la barra no se salga del frame
-                if (barra.getAncho() + barra.getPosX() >= getWidth()) {
-                    ladoDer = true;
-                 } else {
-                     ladoDer = false;
-                 }
-                 if (barra.getPosX() <= 0) {
-                        ladoIzq = true;
-                 } else {
-                        ladoIzq = false;
-                 }
+                barra.setPosX(barra.getPosX()-1);
                 
-                if(moveL) bola.setPosX(bola.getPosX()+2);
-                else
-                    bola.setPosX(bola.getPosX()-2);
-                if(moveA) bola.setPosY(bola.getPosY()+2);
-                else bola.setPosY(bola.getPosY()-2);
+               
                 //Guarda el tiempo actual
 
                 long tiempoTranscurrido =
@@ -291,9 +225,6 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
                 setTiempoActual(getTiempoActual() + tiempoTranscurrido);
                 bola.actualiza(tiempoTranscurrido);
                 barra.actualiza(tiempoTranscurrido);
-                for(Meth a: methList)
-                    a.actualiza(tiempoActual);
-//                t = t + tP;
             }
         }
     }
@@ -304,42 +235,8 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
      * <code>Applet</code>.
      */
     public void checaColision() {
-        //Colision del elefante con el Applet dependiendo a donde se mueve.
-//        switch (direccion) {
-//            case 1: { //se mueve hacia arriba con la flecha arriba.
-//                if (bola.getPosY() < 0) {
-//                    direccion = 3;
-//                    sonido.play();
-//                }
-//                break;
-//            }
-//            case 3: { //se mueve hacia abajo con la flecha abajo.
-//                if (bola.getPosY() + bola.getAlto() > getHeight()) {
-//                    direccion = 1;
-//                    sonido.play();
-//                }
-//                break;
-//            }
-//            case 4: { //se mueve hacia izquierda con la flecha izquierda.
-//                if (bola.getPosX() < 0) {
-//                    direccion = 2;
-//                    sonido.play();
-//                }
-//                break;
-//            }
-//            case 2: { //se mueve hacia derecha con la flecha derecha.
-//                if (bola.getPosX() + bola.getAncho() > getWidth()) {
-//                    direccion = 4;
-//                    sonido.play();
-//                }
-//                break;
-//            }
-//        }
-        //velocI = (int)(Math.random()*(112-85)) + 85;
         if (bola.getPosY() > getHeight()) {
             bolaMove = false;
-            moveA=false;
-            moveL=true;
 //            velocI = (int) (Math.random() * (112 - 85)) + 85; //85 a 112
             
             // la bola se posiciona encima de la barra
@@ -352,34 +249,16 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
             vidas--;// se resta una vida cuando el bola cae
                 
         }
-        //checa si la bola esta dentro del applet
-        if(bola.getPosY()<20){
-            moveA=true;
-        }
-        if(bola.getPosX()>getWidth()-20){
-            moveL=false;
-        }
-        if(bola.getPosX()<0){
-            moveL=true;
-        }
+        
 
         //checa que la barra este dentro del applet
         if(barra.getPosX()<0){
-            direccion=0;
-        }
-        if(barra.getPosX()>getWidth()-barra.getPerimetro().getWidth())
-            direccion=0;
-        for(Meth a: methList){
-            if(bola.intersecta(a) && a.isExist()){
-                a.setExist(false);
-                score = score + 2;
-                if (activaSonido) {
-                    point.play();
-                }
-            }
+            barra.setPosX(getWidth());
+            y = (int) (Math.random() * (getHeight() - 20)) + 20; //85 a 112
+            barra = new Barra(getWidth(), y);
+            
         }
         if (bola.intersecta(barra)) {
-            moveA=false;
 //            velocI = (int) (Math.random() * (112 - 85)) + 85; //85 a 112
 //            if (activaSonido) {
 //                anota.play();
@@ -598,9 +477,6 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
                 g.drawImage(bola.getImagenI(), bola.getPosX(), bola.getPosY(), this);
                 //Dibuja la imagen en la posicion actualizada
                 g.drawImage(barra.getImagenI(), barra.getPosX(), barra.getPosY(), this);
-                for(Meth a: methList){
-                   if(a.isExist())  g.drawImage(a.getImagenI(), a.getPosX(), a.getPosY(), this);
-                }
 //                g.drawString("Puntos : " + list.get(0).getNum(), 10, 10);
                 //Muestra las vidas
                 g.drawString("Vidas: " + vidas, getWidth() / 2 - 10, 80);
@@ -737,14 +613,14 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
      * @return the velocI
      */
     public int getVelocI() {
-        return velocI;
+        return y;
     }
 
     /**
-     * @param velocI the velocI to set
+     * @param y the y to set
      */
-    public void setVelocI(int velocI) {
-        this.velocI = velocI;
+    public void setVelocI(int y) {
+        this.y = y;
     }
 
     /**
@@ -869,9 +745,8 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
             bolaMove = true;
             gravedad = (Double.parseDouble(arr[7]));
             angulo = (Double.parseDouble(arr[8]));
-            velocI = (Integer.parseInt(arr[9]));
+            y = (Integer.parseInt(arr[9]));
             t = (Double.parseDouble(arr[10]));
-            tP = (Double.parseDouble(arr[11]));
             activaSonido = (Boolean.parseBoolean(arr[12]));
             fileIn.close();
             actualiza();
@@ -892,7 +767,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
         try {
             PrintWriter fileOut = new PrintWriter(new FileWriter(nombreArchivo));
 
-            fileOut.println("" + score + "," + vidas + "," + bola.getPosX() + "," + bola.getPosY() + "," + barra.getPosX() + "," + barra.getPosY() + "," + bolaMove + "," + gravedad + "," + angulo + "," + velocI + "," + t + "," + tP + "," + activaSonido);
+            fileOut.println("" + score + "," + vidas + "," + bola.getPosX() + "," + bola.getPosY() + "," + barra.getPosX() + "," + barra.getPosY() + "," + bolaMove + "," + gravedad + "," + angulo + "," + y + "," + t + "," + activaSonido);
 
             fileOut.close();
         } catch (IOException ioe) {
@@ -927,60 +802,5 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
     //public void setFondo(ImageIcon fondo) {
     //    this.fondo = fondo;
     //}
-    
-    /**
-     * @return the tP
-     */
-    public double gettP() {
-        return tP;
-    }
 
-    /**
-     * @param tP the tP to set
-     */
-    public void settP(double tP) {
-        this.tP = tP;
-    }
-
-    /**
-     * @return the moveL
-     */
-    public boolean isMoveL() {
-        return moveL;
-    }
-
-    /**
-     * @param moveL the moveL to set
-     */
-    public void setMoveL(boolean moveL) {
-        this.moveL = moveL;
-    }
-
-    /**
-     * @return the moveA
-     */
-    public boolean isMoveA() {
-        return moveA;
-    }
-
-    /**
-     * @param moveA the moveA to set
-     */
-    public void setMoveA(boolean moveA) {
-        this.moveA = moveA;
-    }
-
-    /**
-     * @return the methList
-     */
-    public LinkedList<Meth> getMethList() {
-        return methList;
-    }
-
-    /**
-     * @param methList the methList to set
-     */
-    public void setMethList(LinkedList<Meth> methList) {
-        this.methList = methList;
-    }
 }
