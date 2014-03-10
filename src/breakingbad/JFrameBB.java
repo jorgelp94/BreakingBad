@@ -68,12 +68,15 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
     private boolean presionaC;
     private boolean presionaEnter; // Al presionar enter empieza el juego
     private int y;
+    private int velocI;
     private double t;
     private double gravedad;
     private double angulo;
     private double anguloRadianes;
     private double cos;
     private double sin;
+    private double tP;
+    private int punto;
     private int caidas; //cuenta las veces que cae el balon
     private int score; // puntaje del jugador
     private String nombreArchivo;    //Nombre del archivo.
@@ -82,6 +85,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
     private Image fondo;
     private Image inicial;
     private Image won;
+    private int fuerza;
 
     /**
      * Metodo <I>init</I> sobrescrito de la clase
@@ -129,8 +133,10 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
         y = (int) (Math.random() * (getHeight() - 20)) + 20; //85 a 112
         
         barra = new Barra(getWidth(), y);
-        
-        
+        velocI= 50;
+        tP= .1;
+        t= .15;
+        punto=500;
         start();
     }
 
@@ -216,15 +222,20 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
             }
             if (bolaMove) {
                 barra.setPosX(barra.getPosX()-1);
-                
-               
                 //Guarda el tiempo actual
-
                 long tiempoTranscurrido =
                         System.currentTimeMillis() - getTiempoActual();
                 setTiempoActual(getTiempoActual() + tiempoTranscurrido);
+                setAnguloRadianes(90);
+                setCos(Math.cos(getAnguloRadianes()));
+                setSin(Math.sin(getAnguloRadianes()));
+//                int x = (int) (velocI * getCos() * t);
+                int y = (int) ((velocI * sin * t) - (.5 * gravedad * t * t));
+//                bola.setPosX(x);
+                bola.setPosY(-y + getPunto());
                 bola.actualiza(tiempoTranscurrido);
                 barra.actualiza(tiempoTranscurrido);
+                t = t + gettP();
             }
         }
     }
@@ -319,7 +330,10 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
                 direccion = 4;
             }
         }
-
+        if(e.getKeyCode()== KeyEvent.VK_SPACE){
+            t=.15;
+            setPunto(bola.getPosY());
+        }
         //Si se presiona la tecla I, presionaI cambia a verdadero. si se vuelve a presionar presionaI cambia a falso
         // Salen instrucciones del juego
         if (e.getKeyCode() == KeyEvent.VK_I) {
@@ -388,7 +402,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
      * @param e es el <code>evento</code> que se genera en al soltar las teclas.
      */
     public void keyReleased(KeyEvent e) {
-        direccion=0;
+        fuerza=0;
     }
 
     /**
@@ -787,6 +801,48 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
      */
     public void setArr(String[] arr) {
         this.arr = arr;
+    }
+
+    /**
+     * @return the fuerza
+     */
+    public int getFuerza() {
+        return fuerza;
+    }
+
+    /**
+     * @param fuerza the fuerza to set
+     */
+    public void setFuerza(int fuerza) {
+        this.fuerza = fuerza;
+    }
+
+    /**
+     * @return the tP
+     */
+    public double gettP() {
+        return tP;
+    }
+
+    /**
+     * @param tP the tP to set
+     */
+    public void settP(double tP) {
+        this.tP = tP;
+    }
+
+    /**
+     * @return the punto
+     */
+    public int getPunto() {
+        return punto;
+    }
+
+    /**
+     * @param punto the punto to set
+     */
+    public void setPunto(int punto) {
+        this.punto = punto;
     }
     
     /**
