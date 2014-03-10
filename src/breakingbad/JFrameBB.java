@@ -54,6 +54,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
     private SoundClip point;  //Objeto SoundClip
     private Bola bola;    // Objeto de la clase Balon
     private Barra barra; //Objeto de la clase Anotacion
+    private Barra barra2; 
     //Variables de control de tiempo de la animaciÃ³n
     private long tiempoActual;
     private long tiempoInicial;
@@ -130,9 +131,10 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
         
         musicaInicio = new SoundClip("sounds/Videogame.wav");
         point = new SoundClip("sounds/Jump.wav");
-        y = (int) (Math.random() * (getHeight() - 20)) + 20; //85 a 112
+        y = (int) (Math.random() * (getHeight() - 100)) + 100; //85 a 112
         
-        barra = new Barra(getWidth(), y);
+        barra = new Barra(getWidth(), 0);
+        barra2= new Barra(getWidth(),y+100);
         velocI= 50;
         tP= .1;
         t= .15;
@@ -222,6 +224,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
             }
             if (bolaMove) {
                 barra.setPosX(barra.getPosX()-1);
+                barra2.setPosX(barra2.getPosX()-1);
                 //Guarda el tiempo actual
                 long tiempoTranscurrido =
                         System.currentTimeMillis() - getTiempoActual();
@@ -232,9 +235,10 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
 //                int x = (int) (velocI * getCos() * t);
                 int y = (int) ((velocI * sin * t) - (.5 * gravedad * t * t));
 //                bola.setPosX(x);
+                System.out.println(barra.getPosY() + " " +barra.getAlto() + " "+ this.y);
                 bola.setPosY(-y + getPunto());
                 bola.actualiza(tiempoTranscurrido);
-                barra.actualiza(tiempoTranscurrido);
+//                barra.actualiza(tiempoTranscurrido);
                 t = t + gettP();
             }
         }
@@ -248,12 +252,6 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
     public void checaColision() {
         if (bola.getPosY() > getHeight()) {
             bolaMove = false;
-//            velocI = (int) (Math.random() * (112 - 85)) + 85; //85 a 112
-            
-            // la bola se posiciona encima de la barra
-            bola.setPosX(barra.getPosX() + barra.getAncho()/2);
-            bola.setPosY(barra.getPosY() - 25);
-//            t = .15;
             if (activaSonido) {
                 bomb.play();
             }
@@ -266,18 +264,12 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
         if(barra.getPosX()<0){
             barra.setPosX(getWidth());
             y = (int) (Math.random() * (getHeight() - 20)) + 20; //85 a 112
-            barra = new Barra(getWidth(), y);
+            barra = new Barra(getWidth(), 0);
+            barra2= new Barra(getWidth(), y+100);
             
         }
         if (bola.intersecta(barra)) {
-//            velocI = (int) (Math.random() * (112 - 85)) + 85; //85 a 112
-//            if (activaSonido) {
-//                anota.play();
-//            }
-//            bolaMove = false;
-//            bola.setPosX(0);
-//            bola.setPosY(500);
-//            t = .15;
+            
         }
 
     }
@@ -490,7 +482,8 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
                 //Dibuja la imagen en la posicion actualizada
                 g.drawImage(bola.getImagenI(), bola.getPosX(), bola.getPosY(), this);
                 //Dibuja la imagen en la posicion actualizada
-                g.drawImage(barra.getImagenI(), barra.getPosX(), barra.getPosY(), this);
+                g.drawImage(barra.getImagenI(), barra.getPosX(), barra.getPosY(),barra.getAncho(),y, this);
+                g.drawImage(barra2.getImagenI(), barra2.getPosX(), barra2.getPosY(),barra2.getAncho(),this.getHeight()-y+100, this);
 //                g.drawString("Puntos : " + list.get(0).getNum(), 10, 10);
                 //Muestra las vidas
                 g.drawString("Vidas: " + vidas, getWidth() / 2 - 10, 80);

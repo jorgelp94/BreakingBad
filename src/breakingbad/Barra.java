@@ -24,7 +24,8 @@ public class Barra extends Base{
     public Barra(int posX, int posY) {
         super(posX, posY);
 //        Image jugador1 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/jugador1.gif"));
-	Image barra = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/barra1.png"));
+	Image barra = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/obstaculo.png"));
+        
         /*
 	Image jugador3 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/jugador3.gif"));
         Image jugador4 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/jugador4.gif"));
