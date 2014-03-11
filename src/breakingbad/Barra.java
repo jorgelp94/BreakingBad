@@ -22,13 +22,10 @@ public class Barra extends Base{
     // posX es la posicion en x del planeta
     // posY es la posicion en y del planeta
     
-    public Barra(int posX, int posY, int y) {
+    public Barra(int posX, int posY) {
         super(posX, posY);
 //        Image jugador1 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/jugador1.gif"));
 	Image barra = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/obstaculo.png"));
-        this.setAlto(y);
-        barra.getScaledInstance(70, y, Image.SCALE_FAST);
-        
         /*
 	Image jugador3 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/jugador3.gif"));
         Image jugador4 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/jugador4.gif"));
@@ -54,7 +51,6 @@ public class Barra extends Base{
         anim.sumaCuadro(jugador9, 100);
         anim.sumaCuadro(jugador10, 100);
         */
-        System.out.println(new ImageIcon(anim.getImagen()).getIconHeight() + " " + y);
         conteo++;
     }
     

@@ -134,8 +134,8 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
         veloc=2;
         y = (int) (Math.random() * (4*(getHeight()/5) - 100)) + 100; //85 a 112
         
-        barra = new Barra(getWidth(), 0,y);
-        barra2= new Barra(getWidth(),y+dist,this.getHeight());
+        barra = new Barra(getWidth(), y-600);
+        barra2= new Barra(getWidth(),y+dist);
         velocI= 30;
         tP= .1;
         t= .15;
@@ -217,7 +217,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
             }
             if (bolaMove) {
                 //incrementar 
-                if(score==5){
+                if(score==500){
                     veloc++;
                     dist -=15;
                 }
@@ -271,8 +271,8 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
         if(barra.getPosX()<0){
             barra.setPosX(getWidth());
             y = (int) (Math.random() * (4*(getHeight()/5) - 20)) + 20; //85 a 112
-            barra = new Barra(getWidth(), 0,y);
-            barra2= new Barra(getWidth(), y+dist,this.getHeight());
+            barra = new Barra(getWidth(),y-600);
+            barra2= new Barra(getWidth(), y+dist);
             
         }
         
@@ -280,8 +280,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
             vidas--;
             bomb.play();
         }
-        if(bola.getPosX()==barra.getPosX()+77.5)
-            score++;
+        score++;
 
     }
 
@@ -497,13 +496,13 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
                 //Dibuja la imagen en la posicion actualizada
                 g.drawImage(bola.getImagenI(), bola.getPosX(), bola.getPosY(), this);
                 //Dibuja la imagen en la posicion actualizada
-                g.drawImage(barra.getImagenI(), barra.getPosX(), barra.getPosY(),barra.getAncho()/2,y, this);
-                g.drawImage(barra2.getImagenI(), barra2.getPosX(), barra2.getPosY(),barra2.getAncho()/2,this.getHeight()-y+dist, this);
+                g.drawImage(barra.getImagenI(), barra.getPosX(), barra.getPosY(),this);
+                g.drawImage(barra2.getImagenI(), barra2.getPosX(), barra2.getPosY(),this);
 //                g.drawString("Puntos : " + list.get(0).getNum(), 10, 10);
                 //Muestra las vidas
                 g.drawString("Vidas: " + vidas, getWidth() / 2 - 10, 80);
                 //Muestra el puntaje
-                g.drawString("Score: " + score, bola.getAncho(), 80);
+                g.drawString("Distancia: " + score/2, bola.getAncho(), 80);
                 if (isPause()) {
                     g.drawString(bola.getPAUSE(), bola.getPosX() + 15, bola.getPosY() + 30);
                 }
