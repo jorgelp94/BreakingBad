@@ -559,7 +559,6 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
             g.drawImage(won,410, 370, this);
             g.setColor(Color.white);
             g.drawString("" + score, 640, 410);
-            presionaS = true;
         }/*else {
             this.setBackground(Color.GRAY);
              g.drawString("    Creditos:", getWidth() / 4 + getWidth() / 8, 200);
