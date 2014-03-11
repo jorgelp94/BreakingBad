@@ -38,10 +38,6 @@ import java.awt.Font;
 
 public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseListener {
     private static final long serialVersionUID = 1L;
-    // Se declaran las variables.
-    private int direccion;    // Direccion del elefante
-    private int incX;    // Incremento en x
-    private int incY;    // Incremento en y
     private int vidas;    // vidas del elefante.
 //    private final int MIN = -5;    //Rango minimo al generar un numero al azar.
 //    private final int MAX = 6;    //Rango maximo al generar un numero al azar.
@@ -62,8 +58,6 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
     private boolean choca;
     private boolean presionaI;
     private boolean bolaMove;
-    private boolean ladoIzq;
-    private boolean ladoDer;
     private boolean activaSonido;
     private boolean presionaG;
     private boolean presionaC;
@@ -89,6 +83,8 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
     private Image won;
     private Image title;
     private int fuerza;
+    private int veloc; //velocidad a la que se mueve la barra
+    private int dist; //distancia entre barra y barra;
 
     /**
      * Metodo <I>init</I> sobrescrito de la clase
@@ -123,8 +119,6 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
         score = 0;
         gravedad = 9.8;
         presionaI = false;
-        ladoIzq = false;
-        ladoDer = false;
         presionaG = false;
         presionaC = false;
         presionaEnter = false;
@@ -136,10 +130,12 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
         
         musicaInicio = new SoundClip("sounds/Videogame.wav");
         point = new SoundClip("sounds/Jump.wav");
+        dist=150;
+        veloc=2;
         y = (int) (Math.random() * (4*(getHeight()/5) - 100)) + 100; //85 a 112
         
         barra = new Barra(getWidth(), 0,y);
-        barra2= new Barra(getWidth(),y+100,this.getHeight());
+        barra2= new Barra(getWidth(),y+dist,this.getHeight());
         velocI= 30;
         tP= .1;
         t= .15;
@@ -220,8 +216,14 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
                 System.out.println("Error en " + e.toString());
             }
             if (bolaMove) {
-                barra.setPosX(barra.getPosX()-1);
-                barra2.setPosX(barra2.getPosX()-1);
+                //incrementar 
+                if(score==5){
+                    veloc++;
+                    dist -=15;
+                }
+                    
+                barra.setPosX(barra.getPosX()-veloc);
+                barra2.setPosX(barra2.getPosX()-veloc);
                 //Guarda el tiempo actual
                 long tiempoTranscurrido =
                         System.currentTimeMillis() - getTiempoActual();
@@ -270,7 +272,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
             barra.setPosX(getWidth());
             y = (int) (Math.random() * (4*(getHeight()/5) - 20)) + 20; //85 a 112
             barra = new Barra(getWidth(), 0,y);
-            barra2= new Barra(getWidth(), y+100,this.getHeight());
+            barra2= new Barra(getWidth(), y+dist,this.getHeight());
             
         }
         
@@ -278,10 +280,8 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
             vidas--;
             bomb.play();
         }
-//        if (bola.getPosX() == barra.getPosX() && bola.getPosY() - bola.getAlto() <= barra.getPosY() + barra.getAlto()) {
-//            vidas--;
-//            bomb.play();    
-//        }
+        if(bola.getPosX()==barra.getPosX()+77.5)
+            score++;
 
     }
 
@@ -325,12 +325,6 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
                 setPause(false);
             } else {
                 setPause(true);
-            }
-        } else {
-            if (e.getKeyCode() == KeyEvent.VK_LEFT) {    //Presiono flecha izquierda
-                direccion = 3;
-            } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {    //Presiono flecha derecha
-                direccion = 4;
             }
         }
         if(e.getKeyCode()== KeyEvent.VK_SPACE){
@@ -504,7 +498,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
                 g.drawImage(bola.getImagenI(), bola.getPosX(), bola.getPosY(), this);
                 //Dibuja la imagen en la posicion actualizada
                 g.drawImage(barra.getImagenI(), barra.getPosX(), barra.getPosY(),barra.getAncho()/2,y, this);
-                g.drawImage(barra2.getImagenI(), barra2.getPosX(), barra2.getPosY(),barra2.getAncho()/2,this.getHeight()-y+100, this);
+                g.drawImage(barra2.getImagenI(), barra2.getPosX(), barra2.getPosY(),barra2.getAncho()/2,this.getHeight()-y+dist, this);
 //                g.drawString("Puntos : " + list.get(0).getNum(), 10, 10);
                 //Muestra las vidas
                 g.drawString("Vidas: " + vidas, getWidth() / 2 - 10, 80);
