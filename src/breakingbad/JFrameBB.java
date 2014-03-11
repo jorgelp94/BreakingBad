@@ -50,6 +50,8 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
     private Bola bola;    // Objeto de la clase Balon
     private Barra barra; //Objeto de la clase Anotacion
     private Barra barra2; 
+    private Barra barra3; //Objeto de la clase Anotacion
+    private Barra barra4; 
     //Variables de control de tiempo de la animaciÃ³n
     private long tiempoActual;
     private long tiempoInicial;
@@ -63,6 +65,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
     private boolean presionaEnter; // Al presionar enter empieza el juego
     private boolean presionaS;
     private int y;
+    private int y2;
     private int velocI;
     private double t;
     private double gravedad;
@@ -134,6 +137,10 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
         
         barra = new Barra(getWidth(), y-600);
         barra2= new Barra(getWidth(),y+dist);
+        y2 = (int) (Math.random() * (4*(getHeight()/5) - 100)) + 100; //85 a 112
+        
+        barra3 = new Barra(getWidth()+700, y2-600);
+        barra4= new Barra(getWidth()+700,y2+dist);
         velocI= 30;
         tP= .1;
         t= .15;
@@ -214,13 +221,15 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
             }
             if (bolaMove) {
                 //incrementar 
-                if(score==500){
+                if(score/2==500 || score/2==1000 || score/2==1500){
                     veloc++;
                     dist -=15;
                 }
                     
                 barra.setPosX(barra.getPosX()-veloc);
                 barra2.setPosX(barra2.getPosX()-veloc);
+                barra3.setPosX(barra3.getPosX()-veloc);
+                barra4.setPosX(barra4.getPosX()-veloc);
                 //Guarda el tiempo actual
                 long tiempoTranscurrido =
                         System.currentTimeMillis() - getTiempoActual();
@@ -266,14 +275,18 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
 
         //checa que la barra este dentro del applet
         if(barra.getPosX()<0){
-            barra.setPosX(getWidth());
             y = (int) (Math.random() * (4*(getHeight()/5) - 20)) + 20; //85 a 112
             barra = new Barra(getWidth(),y-600);
             barra2= new Barra(getWidth(), y+dist);
+        }
+        if(barra3.getPosX()<0){
+            y2 = (int) (Math.random() * (4*(getHeight()/5) - 100)) + 100; //85 a 112
+            barra3 = new Barra(getWidth(), y2-600);
+            barra4= new Barra(getWidth(),y2+dist);
             
         }
         
-        if (barra.intersecta(bola) || barra2.intersecta(bola)) {
+        if (barra.intersecta(bola) || barra2.intersecta(bola) || barra3.intersecta(bola) || barra4.intersecta(bola)) {
             vidas--;
             bomb.play();
         }
@@ -499,6 +512,8 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
                 //Dibuja la imagen en la posicion actualizada
                 g.drawImage(barra.getImagenI(), barra.getPosX(), barra.getPosY(),this);
                 g.drawImage(barra2.getImagenI(), barra2.getPosX(), barra2.getPosY(),this);
+                g.drawImage(barra3.getImagenI(), barra3.getPosX(), barra3.getPosY(),this);
+                g.drawImage(barra4.getImagenI(), barra4.getPosX(), barra4.getPosY(),this);
 //                g.drawString("Puntos : " + list.get(0).getNum(), 10, 10);
                 //Muestra las vidas
                 g.drawString("Vidas: " + vidas, getWidth() / 2 - 10, 80);
