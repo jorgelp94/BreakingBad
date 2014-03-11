@@ -20,7 +20,7 @@ public class Base {
     private int posX;    //posicion en x.       
     private int posY;	//posicion en y.
     protected Animacion anim;    //anim.
-
+    private int alto;
     /**
      * Metodo constructor usado para crear el objeto
      *
@@ -124,6 +124,7 @@ public class Base {
      * del rectangulo
      */
     public Rectangle getPerimetro() {
+        if(alto!=0)return new Rectangle(getPosX(), getPosY(), getAncho(), this.alto);
         return new Rectangle(getPosX(), getPosY(), getAncho(), getAlto());
     }
 
@@ -136,5 +137,12 @@ public class Base {
      */
     public boolean intersecta(Base obj) {
         return getPerimetro().intersects(obj.getPerimetro());
+    }
+
+    /**
+     * @param alto the alto to set
+     */
+    public void setAlto(int alto) {
+        this.alto = alto;
     }
 }

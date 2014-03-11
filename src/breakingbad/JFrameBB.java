@@ -136,11 +136,11 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
         
         musicaInicio = new SoundClip("sounds/Videogame.wav");
         point = new SoundClip("sounds/Jump.wav");
-        y = (int) (Math.random() * (getHeight() - 100)) + 100; //85 a 112
+        y = (int) (Math.random() * (4*(getHeight()/5) - 100)) + 100; //85 a 112
         
-        barra = new Barra(getWidth(), 0);
-        barra2= new Barra(getWidth(),y+100);
-        velocI= 50;
+        barra = new Barra(getWidth(), 0,y);
+        barra2= new Barra(getWidth(),y+100,this.getHeight());
+        velocI= 30;
         tP= .1;
         t= .15;
         punto=500;
@@ -195,20 +195,6 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
             } catch (InterruptedException ex) {
                 System.out.println("Error en " + ex.toString());
             }
-        }
-        
-        try {
-            if (presionaC) {
-                leeArchivo();    //lee el contenido del archivo 
-                presionaC = false;
-            }
-            if (presionaG) {
-                vec.add(new Puntaje(score));    //Agrega el contenido del nuevo puntaje al vector.
-                grabaArchivo();    //Graba el vector en el archivo.
-            }
-
-        } catch (IOException e) {
-            System.out.println("Error en " + e.toString());
         }
     }
 
@@ -282,20 +268,20 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
         //checa que la barra este dentro del applet
         if(barra.getPosX()<0){
             barra.setPosX(getWidth());
-            y = (int) (Math.random() * (getHeight() - 20)) + 20; //85 a 112
-            barra = new Barra(getWidth(), 0);
-            barra2= new Barra(getWidth(), y+100);
+            y = (int) (Math.random() * (4*(getHeight()/5) - 20)) + 20; //85 a 112
+            barra = new Barra(getWidth(), 0,y);
+            barra2= new Barra(getWidth(), y+100,this.getHeight());
             
         }
         
-        if (bola.intersecta(barra) || bola.intersecta(barra2)) {
+        if (barra.intersecta(bola) || barra2.intersecta(bola)) {
             vidas--;
             bomb.play();
         }
-        if (bola.getPosX() == barra.getPosX() && bola.getPosY() - bola.getAlto() <= barra.getPosY() + barra.getAlto()) {
-            vidas--;
-            bomb.play();    
-        }
+//        if (bola.getPosX() == barra.getPosX() && bola.getPosY() - bola.getAlto() <= barra.getPosY() + barra.getAlto()) {
+//            vidas--;
+//            bomb.play();    
+//        }
 
     }
 
@@ -517,8 +503,8 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
                 //Dibuja la imagen en la posicion actualizada
                 g.drawImage(bola.getImagenI(), bola.getPosX(), bola.getPosY(), this);
                 //Dibuja la imagen en la posicion actualizada
-                g.drawImage(barra.getImagenI(), barra.getPosX(), barra.getPosY(),barra.getAncho(),y, this);
-                g.drawImage(barra2.getImagenI(), barra2.getPosX(), barra2.getPosY(),barra2.getAncho(),this.getHeight()-y+100, this);
+                g.drawImage(barra.getImagenI(), barra.getPosX(), barra.getPosY(),barra.getAncho()/2,y, this);
+                g.drawImage(barra2.getImagenI(), barra2.getPosX(), barra2.getPosY(),barra2.getAncho()/2,this.getHeight()-y+100, this);
 //                g.drawString("Puntos : " + list.get(0).getNum(), 10, 10);
                 //Muestra las vidas
                 g.drawString("Vidas: " + vidas, getWidth() / 2 - 10, 80);
