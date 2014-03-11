@@ -45,7 +45,6 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
     private Image gameover;    //Imagen a desplegar al acabar el juego.	 
     private Graphics dbg;	// Objeto grafico
     private SoundClip musicaInicio;    // Objeto SoundClip
-    private SoundClip anota;    // Objeto SoundClip
     private SoundClip bomb;    //Objeto SoundClip 
     private SoundClip point;  //Objeto SoundClip
     private Bola bola;    // Objeto de la clase Balon
@@ -127,8 +126,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
         //Se cargan los sonidos.
 
         bomb = new SoundClip("sounds/drop.wav");
-        
-        musicaInicio = new SoundClip("sounds/Videogame.wav");
+
         point = new SoundClip("sounds/Jump.wav");
         dist=150;
         veloc=2;
@@ -170,7 +168,6 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
      */
     public void run() {
         if (!presionaEnter) {
-            musicaInicio.play();
             vidas = 1;
             score = 0;
         }
@@ -240,10 +237,10 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
 //                barra.actualiza(tiempoTranscurrido);
                 t = t + gettP();
             }
-            if (bola.getPosX() == barra.getPosX() + barra.getAncho()) {
-                score += 1;
-                point.play();
-            }
+            //if (bola.getPosX() == barra.getPosX() + barra.getAncho()) {
+            //    score += 1;
+            //    point.play();
+            //}
             
             if (bola.getPosY() <= 0) {
                 bola.setPosY(0);
@@ -280,7 +277,10 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
             vidas--;
             bomb.play();
         }
-        score++;
+        if (!isPause() && bolaMove){
+            score++;
+        }
+        
 
     }
 
@@ -329,6 +329,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
         if(e.getKeyCode()== KeyEvent.VK_SPACE){
             t=.15;
             setPunto(bola.getPosY());
+            point.play();
         }
         //Si se presiona la tecla I, presionaI cambia a verdadero. si se vuelve a presionar presionaI cambia a falso
         // Salen instrucciones del juego
@@ -535,9 +536,9 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
             g.drawImage(fondo, 0,0, 1024, 640, this);
             g.setFont(new Font("Helvetica", Font.BOLD, 40));
             g.drawImage(gameover, 350, 120, this);
-            g.drawImage(won,410, 370, this);
+            g.drawImage(won,390, 370, this);
             g.setColor(Color.white);
-            g.drawString("" + score, 640, 410);
+            g.drawString("" + score/2, 620, 410);
         }/*else {
             this.setBackground(Color.GRAY);
              g.drawString("    Creditos:", getWidth() / 4 + getWidth() / 8, 200);
