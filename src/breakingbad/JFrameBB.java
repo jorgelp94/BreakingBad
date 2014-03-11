@@ -68,6 +68,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
     private boolean presionaG;
     private boolean presionaC;
     private boolean presionaEnter; // Al presionar enter empieza el juego
+    private boolean presionaS;
     private int y;
     private int velocI;
     private double t;
@@ -86,6 +87,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
     private Image fondo;
     private Image inicial;
     private Image won;
+    private Image title;
     private int fuerza;
 
     /**
@@ -97,19 +99,21 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
      */
     public JFrameBB() {
 
-        this.setSize(1300, 700);
+        this.setSize(1024, 640);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setPause(false);
         vidas = 1;    // Le asignamos un valor inicial a las vidas
         bola = new Bola(getWidth()/5, getHeight()/2);
-        URL tURL = this.getClass().getResource("images/imagen_fondo.jpg");
-        URL tURL2 = this.getClass().getResource("images/wallpaper_inicio.png");
-        URL tURL3 = this.getClass().getResource("images/Uwon.png");
-        URL tURL4 = this.getClass().getResource("images/Ulost.png");
+        URL tURL = this.getClass().getResource("images/back.jpeg");
+        //URL tURL2 = this.getClass().getResource("images/wallpaper_inicio");
+        URL tURL3 = this.getClass().getResource("images/score.png");
+        URL tURL4 = this.getClass().getResource("images/game_over.png");
+        URL tURL5 = this.getClass().getResource("images/title.png");
         fondo = Toolkit.getDefaultToolkit().getImage(tURL); //imagen de fondo al iniciar juego
-        inicial = Toolkit.getDefaultToolkit().getImage(tURL2); // imagen de fondo antes de inicial el juego
+        //inicial = Toolkit.getDefaultToolkit().getImage(tURL2); // imagen de fondo antes de inicial el juego
         won = Toolkit.getDefaultToolkit().getImage(tURL3); //imagen cuando ganas
         gameover = Toolkit.getDefaultToolkit().getImage(tURL4); //imagen cuando pierdes
+        title = Toolkit.getDefaultToolkit().getImage(tURL5);
         
         addKeyListener(this);
         addMouseListener(this);
@@ -124,6 +128,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
         presionaG = false;
         presionaC = false;
         presionaEnter = false;
+        presionaS = false;
         activaSonido = true; // El sonido esta activado al iniciar el jueg
         //Se cargan los sonidos.
 
@@ -170,14 +175,19 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
     public void run() {
         if (!presionaEnter) {
             musicaInicio.play();
+            vidas = 1;
+            score = 0;
         }
 
-        while (vidas > 0) { // entra hasta que el score es 30
+        while (vidas > 0) { 
             actualiza();
             checaColision();
 
             // Se actualiza el <code>Applet</code> repintando el contenido.
             repaint();
+            if (presionaS) {
+                presionaEnter = false;
+            }
 
             try {
                 // El thread se duerme.
@@ -186,6 +196,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
                 System.out.println("Error en " + ex.toString());
             }
         }
+        
         try {
             if (presionaC) {
                 leeArchivo();    //lee el contenido del archivo 
@@ -241,6 +252,14 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
 //                barra.actualiza(tiempoTranscurrido);
                 t = t + gettP();
             }
+            if (bola.getPosX() == barra.getPosX() + barra.getAncho()) {
+                score += 1;
+                point.play();
+            }
+            
+            if (bola.getPosY() <= 0) {
+                bola.setPosY(0);
+            }
         }
     }
 
@@ -268,8 +287,14 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
             barra2= new Barra(getWidth(), y+100);
             
         }
-        if (bola.intersecta(barra)) {
-            
+        
+        if (bola.intersecta(barra) || bola.intersecta(barra2)) {
+            vidas--;
+            bomb.play();
+        }
+        if (bola.getPosX() == barra.getPosX() && bola.getPosY() - bola.getAlto() <= barra.getPosY() + barra.getAlto()) {
+            vidas--;
+            bomb.play();    
         }
 
     }
@@ -366,10 +391,19 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
         // Tecla para iniciar el juego
         if(e.getKeyCode() == KeyEvent.VK_ENTER) {
             presionaEnter = true;
+
         }
         // Tecla para que la bola se mueva
         if (e.getKeyCode() == KeyEvent.VK_SPACE) {
             setBolaMove(true);
+        }
+        
+        if (e.getKeyCode() == KeyEvent.VK_S) {
+            if (presionaS) {
+                presionaS = false;
+            } else {
+                presionaS = true;
+            }
         }
     }
 
@@ -465,12 +499,13 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
      */
     public void paint1(Graphics g) {
         if (!presionaEnter) {
-            g.drawImage(inicial, 0, 0, 1300, 700, this);
-            g.setFont(new Font("defalut", Font.BOLD, 32));
+            g.drawImage(fondo, 0, 0, 1024, 640, this);
             g.setColor(Color.white);
-            g.drawString("METH BREAKER", 518, 150);
+            g.drawImage(title, 260, 120, this);
             g.setFont(new Font("defalut", Font.BOLD, 16));
-            g.drawString("Presiona ENTER para iniciar el juego",500 ,600 );
+            g.drawString("Presiona ENTER para iniciar el juego",370 ,600 );
+            vidas = 1;
+            score = 0;
             
         } else {
             //          g.drawImage(fondo.getImage(), 0, 0,1300,700, this);
@@ -478,7 +513,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
         g.setColor(Color.white);
         if (vidas > 0) {
             if (bola != null) {
-                g.drawImage(fondo, 0, 0, 1300, 700, this);
+                g.drawImage(fondo, 0, 0, 1024, 640, this);
                 //Dibuja la imagen en la posicion actualizada
                 g.drawImage(bola.getImagenI(), bola.getPosX(), bola.getPosY(), this);
                 //Dibuja la imagen en la posicion actualizada
@@ -518,11 +553,13 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
                 g.drawString("No se cargo la imagen..", 20, 20);
             }
         } else {
-            g.drawImage(gameover, 0,0, 1300, 700, this);
-            g.setFont(new Font("defalut", Font.BOLD, 22));
+            g.drawImage(fondo, 0,0, 1024, 640, this);
+            g.setFont(new Font("Helvetica", Font.BOLD, 40));
+            g.drawImage(gameover, 350, 120, this);
+            g.drawImage(won,410, 370, this);
             g.setColor(Color.white);
-            g.drawString("GAME OVER", 500, 200);
-            g.drawString("Score: " +score, 650, 510);
+            g.drawString("" + score, 640, 410);
+            presionaS = true;
         }/*else {
             this.setBackground(Color.GRAY);
              g.drawString("    Creditos:", getWidth() / 4 + getWidth() / 8, 200);
@@ -532,7 +569,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
             g.drawString("Antonio Mejorado", getWidth() / 4 + getWidth() / 8, 280);
                     
         } */
-        
+        /*
         if (score == 30) {
             g.setFont(new Font("defalut", Font.BOLD, 30));
             g.setColor(Color.white);
@@ -541,6 +578,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
             g.drawString("Score: " +score, 600, 530);
             vidas = 0;
         }
+        */
         
        }
 
