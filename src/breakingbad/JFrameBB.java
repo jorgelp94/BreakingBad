@@ -62,6 +62,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
     private boolean activaSonido;
     private boolean presionaG;
     private boolean presionaC;
+    private boolean presionaF;
     private boolean gameoverB;
     private boolean presionaEnter; // Al presionar enter empieza el juego
     private boolean presionaR;
@@ -420,7 +421,11 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
                 presionaC = true;
             }
         }
-        
+        if(e.getKeyCode()== KeyEvent.VK_F){
+            if(presionaF)presionaF=false;
+            else
+                presionaF=true;
+        }
         // Tecla para iniciar el juego
         if(e.getKeyCode() == KeyEvent.VK_ENTER) {
             presionaEnter = true;
@@ -598,6 +603,23 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
                     //g.drawString("Presiona ENTER para iniciar el juego",370 ,600 );
                     g.drawImage(enter, 325, 580, this);
 
+                }
+                if(presionaF){
+                    g.drawString("Puntaje:", getWidth() / 4 + getWidth() / 8, 200);
+                    BufferedReader fileIn;
+                    try {
+                        fileIn = new BufferedReader(new FileReader("puntaje.txt"));
+                        String dato = fileIn.readLine();
+                        setArr(dato.split(","));
+                        for(int x=0; x<arr.length;x=x+2){
+                            
+                        g.drawString(arr[x]+ " : "+ arr[x+1], getWidth() / 4 + getWidth() / 8, 220+ (20*x));
+                        }
+                        fileIn.close();
+//                        actualiza();
+                    } catch (IOException ioe) {
+                        System.out.println("Se arrojo una excepcion " + ioe.toString());
+                    }
                 }
                 if (presionaI) {
 
