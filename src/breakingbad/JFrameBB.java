@@ -385,6 +385,36 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
                 point.play();
             }
         }
+        if (e.getKeyCode()== KeyEvent.VK_SPACE && vidas == 0) {
+            vidas = 1;    // Le asignamos un valor inicial a las vidas
+            bola = new Bola(getWidth()/2, getHeight()/2);
+            score = 0;
+            gravedad = 9.8;
+            presionaEnter = true;
+            bolaMove=false;
+            presionaR = false;
+            presionaI= false;
+            gameoverB=false;
+            
+        kreal=true;
+            name="";
+            activaSonido = true; // El sonido esta activado al iniciar el jueg
+            dist=150;
+            veloc=2;
+            y = (int) (Math.random() * (4*(getHeight()/5) - 100)) + 100; //85 a 112
+
+            barra = new Barra(getWidth(), y-600);
+            barra2= new Barra(getWidth(),y+dist);
+            y2 = (int) (Math.random() * (4*(getHeight()/5) - 100)) + 100; //85 a 112
+
+            barra3 = new Barra(getWidth()+561, y2-600);
+            barra4= new Barra(getWidth()+561,y2+dist);
+            velocI= 30;
+            tP= .1;
+            t= .15;
+            pass=0;
+            punto=500;
+        }
         //Si se presiona la tecla I, presionaI cambia a verdadero. si se vuelve a presionar presionaI cambia a falso
         // Salen instrucciones del juego
         if (e.getKeyCode() == KeyEvent.VK_I) {
@@ -434,34 +464,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
 
         // Tecla que reinicia el juego
         if (e.getKeyCode() == KeyEvent.VK_R && vidas==0) {
-            vidas = 1;    // Le asignamos un valor inicial a las vidas
-            bola = new Bola(getWidth()/5, getHeight()/2);
-            score = 0;
-            gravedad = 9.8;
-            presionaEnter = true;
-            bolaMove=false;
-            presionaR = false;
-            presionaI= false;
-            gameoverB=false;
             
-        kreal=true;
-            name="";
-            activaSonido = true; // El sonido esta activado al iniciar el jueg
-            dist=150;
-            veloc=2;
-            y = (int) (Math.random() * (4*(getHeight()/5) - 100)) + 100; //85 a 112
-
-            barra = new Barra(getWidth(), y-600);
-            barra2= new Barra(getWidth(),y+dist);
-            y2 = (int) (Math.random() * (4*(getHeight()/5) - 100)) + 100; //85 a 112
-
-            barra3 = new Barra(getWidth()+561, y2-600);
-            barra4= new Barra(getWidth()+561,y2+dist);
-            velocI= 30;
-            tP= .1;
-            t= .15;
-            pass=0;
-            punto=500;
         }
         }
     }
@@ -506,6 +509,36 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
             setPunto(bola.getPosY());
             if (vidas > 0 && activaSonido) {
                 point.play();
+            }
+            if (vidas == 0) {
+                vidas = 1;    // Le asignamos un valor inicial a las vidas
+                bola = new Bola(getWidth()/2, getHeight()/2);
+                score = 0;
+                gravedad = 9.8;
+                presionaEnter = true;
+                bolaMove=false;
+                presionaR = false;
+                presionaI= false;
+                gameoverB=false;
+            
+                kreal=true;
+                name="";
+                activaSonido = true; // El sonido esta activado al iniciar el jueg
+                dist=150;
+                veloc=2;
+                y = (int) (Math.random() * (4*(getHeight()/5) - 100)) + 100; //85 a 112
+
+                barra = new Barra(getWidth(), y-600);
+                barra2= new Barra(getWidth(),y+dist);
+                y2 = (int) (Math.random() * (4*(getHeight()/5) - 100)) + 100; //85 a 112
+
+                barra3 = new Barra(getWidth()+561, y2-600);
+                barra4= new Barra(getWidth()+561,y2+dist);
+                velocI= 30;
+                tP= .1;
+                t= .15;
+                pass=0;
+                punto=500;
             }
     }
 
@@ -557,6 +590,36 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
             setPunto(bola.getPosY());
             if (vidas > 0 && activaSonido) {
                 point.play();
+            }
+            if (vidas == 0) {
+                vidas = 1;    // Le asignamos un valor inicial a las vidas
+                bola = new Bola(getWidth()/2, getHeight()/2);
+                score = 0;
+                gravedad = 9.8;
+                presionaEnter = true;
+                bolaMove=false;
+                presionaR = false;
+                presionaI= false;
+                gameoverB=false;
+
+                kreal=true;
+                name="";
+                activaSonido = true; // El sonido esta activado al iniciar el jueg
+                dist=150;
+                veloc=2;
+                y = (int) (Math.random() * (4*(getHeight()/5) - 100)) + 100; //85 a 112
+
+                barra = new Barra(getWidth(), y-600);
+                barra2= new Barra(getWidth(),y+dist);
+                y2 = (int) (Math.random() * (4*(getHeight()/5) - 100)) + 100; //85 a 112
+
+                barra3 = new Barra(getWidth()+561, y2-600);
+                barra4= new Barra(getWidth()+561,y2+dist);
+                velocI= 30;
+                tP= .1;
+                t= .15;
+                pass=0;
+                punto=500;
             }
     }
 
