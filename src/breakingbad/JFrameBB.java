@@ -93,6 +93,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
     private int pass;
     private String name;
     private boolean kreal;
+    private String scores[][];
 
     /**
      * Metodo <I>init</I> sobrescrito de la clase
@@ -358,10 +359,11 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
         System.out.println(name);
         if(gameoverB){
             System.out.println("entro");
-            if(e.getKeyCode() == KeyEvent.VK_ENTER)
+            if(e.getKeyCode() == KeyEvent.VK_ENTER){
                 gameoverB=false;
-            else
-                System.out.println(e.getKeyChar());
+                grabaArchivo();
+            }else{
+                System.out.println(e.getKeyChar());}
            name= name+e.getKeyChar() ;
         }else{  
         if (e.getKeyCode() == KeyEvent.VK_P) {
@@ -829,22 +831,13 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
     public void leeArchivo() throws IOException {
         BufferedReader fileIn;
         try {
-            presionaC = false;
-            fileIn = new BufferedReader(new FileReader(nombreArchivo));
+            fileIn = new BufferedReader(new FileReader("puntaje.txt"));
             String dato = fileIn.readLine();
             setArr(dato.split(","));
-            score = (Integer.parseInt(arr[0]));
-            vidas = (Integer.parseInt(arr[1]));
-            bola.setPosX(Integer.parseInt(arr[2]));
-            bola.setPosX(Integer.parseInt(arr[3]));
-            barra.setPosX(Integer.parseInt(arr[4]));
-            barra.setPosY(Integer.parseInt(arr[5]));
-            bolaMove = true;
-            gravedad = (Double.parseDouble(arr[7]));
-            angulo = (Double.parseDouble(arr[8]));
-            y = (Integer.parseInt(arr[9]));
-            t = (Double.parseDouble(arr[10]));
-            activaSonido = (Boolean.parseBoolean(arr[12]));
+            for(int x=0; x<arr.length;x=x+2){
+                scores[x][0]= (arr[x]);
+                scores[x][1]= (arr[x+1]);
+            }
             fileIn.close();
             actualiza();
         } catch (IOException ioe) {
@@ -860,11 +853,11 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
      *
      * @throws IOException
      */
-    public void grabaArchivo() throws IOException {
+    public void grabaArchivo() {
         try {
-            PrintWriter fileOut = new PrintWriter(new FileWriter(nombreArchivo));
+            PrintWriter fileOut = new PrintWriter(new FileWriter("puntaje.txt"));
 
-            fileOut.println("" + score + "," + vidas + "," + bola.getPosX() + "," + bola.getPosY() + "," + barra.getPosX() + "," + barra.getPosY() + "," + bolaMove + "," + gravedad + "," + angulo + "," + y + "," + t + "," + activaSonido);
+            fileOut.println(name + ","+ score);
 
             fileOut.close();
         } catch (IOException ioe) {
