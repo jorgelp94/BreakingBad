@@ -106,7 +106,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setPause(false);
         vidas = 1;    // Le asignamos un valor inicial a las vidas
-        bola = new Bola(getWidth()/2, getHeight()/2);
+        bola = new Bola(getWidth()/5, getHeight()/2);
         URL tURL = this.getClass().getResource("images/back.jpeg");
         //URL tURL2 = this.getClass().getResource("images/wallpaper_inicio");
         URL tURL3 = this.getClass().getResource("images/score.png");
@@ -145,12 +145,12 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
         veloc=2;
         y = (int) (Math.random() * (4*(getHeight()/5) - 100)) + 100; //85 a 112
         
-        barra = new Barra(0, y-600);
-        barra2= new Barra(0,y+dist);
+        barra = new Barra(getWidth(), y-600);
+        barra2= new Barra(getWidth(),y+dist);
         y2 = (int) (Math.random() * (4*(getHeight()/5) - 100)) + 100; //85 a 112
         
-        barra3 = new Barra(-561, y2-600);
-        barra4= new Barra(-561,y2+dist);
+        barra3 = new Barra(getWidth()+561, y2-600);
+        barra4= new Barra(getWidth()+561,y2+dist);
         velocI= 30;
         tP= .1;
         t= .15;
@@ -237,10 +237,10 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
                     pass= score;
                 }
                     
-                barra.setPosX(barra.getPosX()+veloc);
-                barra2.setPosX(barra2.getPosX()+veloc);
-                barra3.setPosX(barra3.getPosX()+veloc);
-                barra4.setPosX(barra4.getPosX()+veloc);
+                barra.setPosX(barra.getPosX()-veloc);
+                barra2.setPosX(barra2.getPosX()-veloc);
+                barra3.setPosX(barra3.getPosX()-veloc);
+                barra4.setPosX(barra4.getPosX()-veloc);
                 //Guarda el tiempo actual
                 long tiempoTranscurrido =
                         System.currentTimeMillis() - getTiempoActual();
@@ -280,15 +280,15 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
         
 
         //checa que la barra este dentro del applet
-        if(barra.getPosX()>this.getWidth()+97){
+        if(barra.getPosX()<-97){
             y = (int) (Math.random() * (4*(getHeight()/5) - 20)) + 20; //85 a 112
-            barra = new Barra(0,y-600);
-            barra2= new Barra(0, y+dist);
+            barra = new Barra(getWidth(),y-600);
+            barra2= new Barra(getWidth(), y+dist);
         }
-        if(barra3.getPosX()>this.getWidth()+97){
+        if(barra3.getPosX()<-97){
             y2 = (int) (Math.random() * (4*(getHeight()/5) - 100)) + 100; //85 a 112
-            barra3 = new Barra(0, y2-600);
-            barra4= new Barra(0,y2+dist);
+            barra3 = new Barra(getWidth(), y2-600);
+            barra4= new Barra(getWidth(),y2+dist);
             
         }
         
@@ -296,10 +296,10 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
             vidas--;
             bomb.play();
         }
-        if ((barra.getPosX()>bola.getPosX()&& (!barra.isPasa()))){
+        if ((barra.getPosX()<bola.getPosX()&& (!barra.isPasa()))){
             barra.setPasa(true);
             score++;
-        }else if(barra3.getPosX()>bola.getPosX()&& (!barra3.isPasa()))
+        }else if(barra3.getPosX()<bola.getPosX()&& (!barra3.isPasa()))
         {
             barra3.setPasa(true);
             score++;
