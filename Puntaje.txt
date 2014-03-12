@@ -1,1 +1,1 @@
-,0
+Luis,10,Jorge,15,Daniel,20
