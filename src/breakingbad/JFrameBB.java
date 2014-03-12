@@ -178,9 +178,11 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
      */
     public void run() {
 
-        while (vidas > 0) { 
-            actualiza();
-            checaColision();
+        while (true) { 
+            if(vidas!=0){
+                actualiza();
+                checaColision();
+            }
 
             // Se actualiza el <code>Applet</code> repintando el contenido.
             repaint();
@@ -201,7 +203,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
     public void actualiza() {
         //Dependiendo de la direccion del elefante es hacia donde se mueve.
         if (!isPause() && !presionaI) {
-                    presionaG = true;
+
             try {
                 if (presionaC) {
                     leeArchivo();    //lee el contenido del archivo 
@@ -389,8 +391,27 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
         }
 
         // Tecla que reinicia el juego
-        if (e.getKeyCode() == KeyEvent.VK_R) {
-            presionaR = true;
+        if (e.getKeyCode() == KeyEvent.VK_R && vidas==0) {
+            vidas = 1;    // Le asignamos un valor inicial a las vidas
+                score = 0;
+                gravedad = 9.8;
+                presionaEnter = true;
+                presionaR = false;
+                activaSonido = true; // El sonido esta activado al iniciar el jueg
+                dist=150;
+                veloc=2;
+                y = (int) (Math.random() * (4*(getHeight()/5) - 100)) + 100; //85 a 112
+
+                barra = new Barra(getWidth(), y-600);
+                barra2= new Barra(getWidth(),y+dist);
+                y2 = (int) (Math.random() * (4*(getHeight()/5) - 100)) + 100; //85 a 112
+
+                barra3 = new Barra(getWidth()+700, y2-600);
+                barra4= new Barra(getWidth()+700,y2+dist);
+                velocI= 30;
+                tP= .1;
+                t= .15;
+                punto=500;
         }
     }
 
@@ -537,6 +558,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
                     g.drawString("P - pausa el juego", getWidth() / 4 + getWidth() / 8, 340);
                     g.drawString("S - activa/desactiva el sonido del juego", getWidth() / 4 + getWidth() / 8, 360);
                     g.drawString("SPACE - eleva el pajaro", getWidth() / 4 + getWidth() / 8, 380);
+                   
                 }
                 if (vidas == 0) {
                     g.drawImage(fondo, 0,0, 1024, 640, this);
@@ -564,32 +586,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
             g.setColor(Color.white);
             g.drawString("" + score/2, 620, 410);
             g.drawImage(restart, 285, 530, this);
-      
-            if (presionaR) {
-                vidas = 1;
-                score = 0;
-                presionaR = false;
-            }
-            
-        }/*else {
-            this.setBackground(Color.GRAY);
-             g.drawString("    Creditos:", getWidth() / 4 + getWidth() / 8, 200);
-            g.drawString("Luis Alberto Reyna", getWidth() / 4 + getWidth() / 8, 220);
-            g.drawString("Jorge Luis Perales", getWidth() / 4 + getWidth() / 8, 240);
-            g.drawString("     Colaboracion:", getWidth() / 4 + getWidth() / 8, 260);
-            g.drawString("Antonio Mejorado", getWidth() / 4 + getWidth() / 8, 280);
-                    
-        } */
-        /*
-        if (score == 30) {
-            g.setFont(new Font("defalut", Font.BOLD, 30));
-            g.setColor(Color.white);
-            g.drawImage(won, 0,0, 1300, 700, this);
-            g.drawString("CONGRATULATIONS!!!", 500, 150);
-            g.drawString("Score: " +score, 600, 530);
-            vidas = 0;
         }
-        */
         
        }
 
