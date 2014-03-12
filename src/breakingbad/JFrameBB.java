@@ -86,6 +86,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
     private Image won;
     private Image title;
     private Image restart;
+    private Image enter;
     private int fuerza;
     private int veloc; //velocidad a la que se mueve la barra
     private int dist; //distancia entre barra y barra;
@@ -112,13 +113,15 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
         URL tURL3 = this.getClass().getResource("images/score.png");
         URL tURL4 = this.getClass().getResource("images/game_over.png");
         URL tURL5 = this.getClass().getResource("images/title.png");
-        URL tURL6 = this.getClass().getResource("images/restart.png");
+        URL tURL6 = this.getClass().getResource("images/reset.png");
+        URL tURL7 = this.getClass().getResource("images/texto_inicio.png");
         fondo = Toolkit.getDefaultToolkit().getImage(tURL); //imagen de fondo al iniciar juego
         //inicial = Toolkit.getDefaultToolkit().getImage(tURL2); // imagen de fondo antes de inicial el juego
         won = Toolkit.getDefaultToolkit().getImage(tURL3); //imagen cuando ganas
         gameover = Toolkit.getDefaultToolkit().getImage(tURL4); //imagen cuando pierdes
         title = Toolkit.getDefaultToolkit().getImage(tURL5);
         restart = Toolkit.getDefaultToolkit().getImage(tURL6);
+        enter = Toolkit.getDefaultToolkit().getImage(tURL7);
         
         addKeyListener(this);
         addMouseListener(this);
@@ -581,7 +584,8 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
                     g.setColor(Color.white);
                     g.drawImage(title, 260, 120, this);
                     g.setFont(new Font("defalut", Font.BOLD, 16));
-                    g.drawString("Presiona ENTER para iniciar el juego",370 ,600 );
+                    //g.drawString("Presiona ENTER para iniciar el juego",370 ,600 );
+                    g.drawImage(enter, 370, 600, this);
 
                 }
                 if (presionaI) {
