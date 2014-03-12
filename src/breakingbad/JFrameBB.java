@@ -107,7 +107,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setPause(false);
         vidas = 1;    // Le asignamos un valor inicial a las vidas
-        bola = new Bola(getWidth()/5, getHeight()/2);
+        bola = new Bola(getWidth()/2, getHeight()/2);
         URL tURL = this.getClass().getResource("images/back.jpeg");
         //URL tURL2 = this.getClass().getResource("images/wallpaper_inicio");
         URL tURL3 = this.getClass().getResource("images/score.png");
@@ -497,7 +497,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
             setBolaMove(true);
             t=.15;
             setPunto(bola.getPosY());
-            if (vidas > 0) {
+            if (vidas > 0 && activaSonido) {
                 point.play();
             }
     }
@@ -615,7 +615,8 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
                     */
                     g.drawString("P - pausa el juego", getWidth() / 4 + getWidth() / 8, 340);
                     g.drawString("S - activa/desactiva el sonido del juego", getWidth() / 4 + getWidth() / 8, 360);
-                    g.drawString("SPACE - eleva el pajaro", getWidth() / 4 + getWidth() / 8, 380);
+                    g.drawString("F - muestra el nombre y los scores guardados", getWidth() / 4 + getWidth() / 8, 380);
+                    g.drawString("SPACE - eleva el pajaro", getWidth() / 4 + getWidth() / 8, 400);
                    
                 }
             } else {
