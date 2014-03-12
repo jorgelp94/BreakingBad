@@ -98,7 +98,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
      */
     public JFrameBB() {
 
-        this.setSize(1024, 640);
+        this.setSize(1025, 640);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setPause(false);
         vidas = 1;    // Le asignamos un valor inicial a las vidas
@@ -142,8 +142,8 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
         barra2= new Barra(getWidth(),y+dist);
         y2 = (int) (Math.random() * (4*(getHeight()/5) - 100)) + 100; //85 a 112
         
-        barra3 = new Barra(getWidth()+700, y2-600);
-        barra4= new Barra(getWidth()+700,y2+dist);
+        barra3 = new Barra(getWidth()+561, y2-600);
+        barra4= new Barra(getWidth()+561,y2+dist);
         velocI= 30;
         tP= .1;
         t= .15;
@@ -219,8 +219,8 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
             }
             if (bolaMove) {
                 //incrementar 
-                if(score/2==500 || score/2==1000 || score/2==1500){
-                    veloc++;
+                if((score/2)%500==0){
+//                    veloc++;
                     dist -=10;
                 }
                     
@@ -244,14 +244,6 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
 //                barra.actualiza(tiempoTranscurrido);
                 t = t + gettP();
             }
-            //if (bola.getPosX() == barra.getPosX() + barra.getAncho()) {
-            //    score += 1;
-            //    point.play();
-            //}
-            
-            if (bola.getPosY() <= 0) {
-                bola.setPosY(0);
-            }
         }
     }
 
@@ -272,12 +264,12 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
         
 
         //checa que la barra este dentro del applet
-        if(barra.getPosX()<0){
+        if(barra.getPosX()<-97){
             y = (int) (Math.random() * (4*(getHeight()/5) - 20)) + 20; //85 a 112
             barra = new Barra(getWidth(),y-600);
             barra2= new Barra(getWidth(), y+dist);
         }
-        if(barra3.getPosX()<0){
+        if(barra3.getPosX()<-97){
             y2 = (int) (Math.random() * (4*(getHeight()/5) - 100)) + 100; //85 a 112
             barra3 = new Barra(getWidth(), y2-600);
             barra4= new Barra(getWidth(),y2+dist);
@@ -393,25 +385,27 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
         // Tecla que reinicia el juego
         if (e.getKeyCode() == KeyEvent.VK_R && vidas==0) {
             vidas = 1;    // Le asignamos un valor inicial a las vidas
-                score = 0;
-                gravedad = 9.8;
-                presionaEnter = true;
-                presionaR = false;
-                activaSonido = true; // El sonido esta activado al iniciar el jueg
-                dist=150;
-                veloc=2;
-                y = (int) (Math.random() * (4*(getHeight()/5) - 100)) + 100; //85 a 112
+            bola = new Bola(getWidth()/5, getHeight()/2);
+            score = 0;
+            gravedad = 9.8;
+            presionaEnter = true;
+            bolaMove=false;
+            presionaR = false;
+            activaSonido = true; // El sonido esta activado al iniciar el jueg
+            dist=150;
+            veloc=2;
+            y = (int) (Math.random() * (4*(getHeight()/5) - 100)) + 100; //85 a 112
 
-                barra = new Barra(getWidth(), y-600);
-                barra2= new Barra(getWidth(),y+dist);
-                y2 = (int) (Math.random() * (4*(getHeight()/5) - 100)) + 100; //85 a 112
+            barra = new Barra(getWidth(), y-600);
+            barra2= new Barra(getWidth(),y+dist);
+            y2 = (int) (Math.random() * (4*(getHeight()/5) - 100)) + 100; //85 a 112
 
-                barra3 = new Barra(getWidth()+700, y2-600);
-                barra4= new Barra(getWidth()+700,y2+dist);
-                velocI= 30;
-                tP= .1;
-                t= .15;
-                punto=500;
+            barra3 = new Barra(getWidth()+561, y2-600);
+            barra4= new Barra(getWidth()+561,y2+dist);
+            velocI= 30;
+            tP= .1;
+            t= .15;
+            punto=500;
         }
     }
 
