@@ -296,10 +296,10 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
             vidas--;
             bomb.play();
         }
-        if ((barra.getPosX()<bola.getPosX()&& (!barra.isPasa()))){
+        if ((barra.getPosX()>bola.getPosX()&& (!barra.isPasa()))){
             barra.setPasa(true);
             score++;
-        }else if(barra3.getPosX()<bola.getPosX()&& (!barra3.isPasa()))
+        }else if(barra3.getPosX()>bola.getPosX()&& (!barra3.isPasa()))
         {
             barra3.setPasa(true);
             score++;
