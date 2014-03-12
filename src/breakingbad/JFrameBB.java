@@ -358,15 +358,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
      */
     public void keyPressed(KeyEvent e) {
         System.out.println(name);
-        if(gameoverB){
-            System.out.println("entro");
-            if(e.getKeyCode() == KeyEvent.VK_ENTER){
-                gameoverB=false;
-                grabaArchivo();
-            }else{
-                System.out.println(e.getKeyChar());}
-           name= name+e.getKeyChar() ;
-        }else{  
+         
         if (e.getKeyCode() == KeyEvent.VK_P) {
             if (isPause()) {
                 setPause(false);
@@ -466,7 +458,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
         if (e.getKeyCode() == KeyEvent.VK_R && vidas==0) {
             
         }
-        }
+       
     }
 
     /**
@@ -650,7 +642,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
                 //Muestra las vidas
                 g.drawString("Vidas: " + vidas, getWidth() / 2 - 10, 80);
                 //Muestra el puntaje
-                g.drawString("Distancia: " + score, bola.getAncho(), 80);
+                g.drawString("Puntaje: " + score, bola.getAncho(), 80);
                 if (isPause()) {
                     g.drawString(bola.getPAUSE(), bola.getPosX() + 15, bola.getPosY() + 30);
                 }
