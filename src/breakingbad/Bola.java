@@ -46,7 +46,9 @@ public class Bola extends Base {
         super(posX, posY);
         //Se cargan las imágenes(cuadros) para la animación
 //        Image balon1 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/balon1.gif"));
-        Image balon2 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/bird.png"));
+        Image balon2 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/bird2.png"));
+        Image balon3 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/bird3.png"));
+        Image balon4 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/bird2.png"));
         /*
         Image balon3 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/bola4.png"));
         Image balon4 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/bola1.png"));
@@ -56,6 +58,8 @@ public class Bola extends Base {
         anim = new Animacion();
 //        anim.sumaCuadro(balon1, 100);
         anim.sumaCuadro(balon2, 100);
+        anim.sumaCuadro(balon3, 100);
+        anim.sumaCuadro(balon4, 100);
         /*
         anim.sumaCuadro(balon3, 100);
         anim.sumaCuadro(balon4, 100);
