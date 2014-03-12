@@ -63,7 +63,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
     private boolean presionaG;
     private boolean presionaC;
     private boolean presionaEnter; // Al presionar enter empieza el juego
-    private boolean presionaS;
+    private boolean presionaR;
     private int y;
     private int y2;
     private int velocI;
@@ -84,6 +84,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
     private Image inicial;
     private Image won;
     private Image title;
+    private Image restart;
     private int fuerza;
     private int veloc; //velocidad a la que se mueve la barra
     private int dist; //distancia entre barra y barra;
@@ -107,11 +108,13 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
         URL tURL3 = this.getClass().getResource("images/score.png");
         URL tURL4 = this.getClass().getResource("images/game_over.png");
         URL tURL5 = this.getClass().getResource("images/title.png");
+        URL tURL6 = this.getClass().getResource("images/restart.png");
         fondo = Toolkit.getDefaultToolkit().getImage(tURL); //imagen de fondo al iniciar juego
         //inicial = Toolkit.getDefaultToolkit().getImage(tURL2); // imagen de fondo antes de inicial el juego
         won = Toolkit.getDefaultToolkit().getImage(tURL3); //imagen cuando ganas
         gameover = Toolkit.getDefaultToolkit().getImage(tURL4); //imagen cuando pierdes
         title = Toolkit.getDefaultToolkit().getImage(tURL5);
+        restart = Toolkit.getDefaultToolkit().getImage(tURL6);
         
         addKeyListener(this);
         addMouseListener(this);
@@ -124,7 +127,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
         presionaG = false;
         presionaC = false;
         presionaEnter = false;
-        presionaS = false;
+        presionaR = false;
         activaSonido = true; // El sonido esta activado al iniciar el jueg
         //Se cargan los sonidos.
 
@@ -174,10 +177,6 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
      *
      */
     public void run() {
-        if (!presionaEnter) {
-            vidas = 1;
-            score = 0;
-        }
 
         while (vidas > 0) { 
             actualiza();
@@ -185,9 +184,6 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
 
             // Se actualiza el <code>Applet</code> repintando el contenido.
             repaint();
-            if (presionaS) {
-                presionaEnter = false;
-            }
 
             try {
                 // El thread se duerme.
@@ -223,7 +219,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
                 //incrementar 
                 if(score/2==500 || score/2==1000 || score/2==1500){
                     veloc++;
-                    dist -=15;
+                    dist -=10;
                 }
                     
                 barra.setPosX(barra.getPosX()-veloc);
@@ -339,10 +335,15 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
                 setPause(true);
             }
         }
-        if(e.getKeyCode()== KeyEvent.VK_SPACE){
+        
+        // Tecla para que la bola se mueva
+        if(e.getKeyCode()== KeyEvent.VK_SPACE && presionaEnter){
+            setBolaMove(true);
             t=.15;
             setPunto(bola.getPosY());
-            point.play();
+            if (vidas > 0) {
+                point.play();
+            }
         }
         //Si se presiona la tecla I, presionaI cambia a verdadero. si se vuelve a presionar presionaI cambia a falso
         // Salen instrucciones del juego
@@ -386,17 +387,10 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
             presionaEnter = true;
 
         }
-        // Tecla para que la bola se mueva
-        if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-            setBolaMove(true);
-        }
-        
-        if (e.getKeyCode() == KeyEvent.VK_S) {
-            if (presionaS) {
-                presionaS = false;
-            } else {
-                presionaS = true;
-            }
+
+        // Tecla que reinicia el juego
+        if (e.getKeyCode() == KeyEvent.VK_R) {
+            presionaR = true;
         }
     }
 
@@ -497,8 +491,6 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
             g.drawImage(title, 260, 120, this);
             g.setFont(new Font("defalut", Font.BOLD, 16));
             g.drawString("Presiona ENTER para iniciar el juego",370 ,600 );
-            vidas = 1;
-            score = 0;
             
         } else {
             //          g.drawImage(fondo.getImage(), 0, 0,1300,700, this);
@@ -529,19 +521,22 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
                 if (presionaI) {
 
                     g.drawString("Instrucciones:", getWidth() / 4 + getWidth() / 8, 200);
-                    g.drawString("Mueve la camioneta con las flechas del teclado", getWidth() / 4 + getWidth() / 8, 220);
-                    g.drawString("para que rebote la bola y destruya los objetos", getWidth() / 4 + getWidth() / 8, 240);
-                    g.drawString("azules (metanfetaminas).", getWidth() / 4 + getWidth() / 8, 260);
+                    g.drawString("Presiona la barra espaciadora para elevar el", getWidth() / 4 + getWidth() / 8, 220);
+                    g.drawString("pajaro y esqiva los obstaculos que se mueven.", getWidth() / 4 + getWidth() / 8, 240);
                     
                     g.drawString("Teclas: ", getWidth() / 4 + getWidth() / 8, 300);
+                    /*
                     g.drawString("Flecha izquierda - se mueve a la izquierda", getWidth() / 4 + getWidth() / 8, 320);
                     g.drawString("Flecha derecha - se mueve a la derecha", getWidth() / 4 + getWidth() / 8, 340);
-                    g.drawString("I - muestra/oculta instrucciones", getWidth() / 4 + getWidth() / 8, 360);
+                    */
+                    g.drawString("I - muestra/oculta instrucciones", getWidth() / 4 + getWidth() / 8, 320);
+                    /*
                     g.drawString("G - guarda el juego", getWidth() / 4 + getWidth() / 8, 380);
                     g.drawString("C - carga el juego", getWidth() / 4 + getWidth() / 8, 400);
-                    g.drawString("P - pausa el juego", getWidth() / 4 + getWidth() / 8, 420);
-                    g.drawString("S - activa/desactiva el sonido del juego", getWidth() / 4 + getWidth() / 8, 440);
-                    g.drawString("SPACE - sale la bola", getWidth() / 4 + getWidth() / 8, 460);
+                    */
+                    g.drawString("P - pausa el juego", getWidth() / 4 + getWidth() / 8, 340);
+                    g.drawString("S - activa/desactiva el sonido del juego", getWidth() / 4 + getWidth() / 8, 360);
+                    g.drawString("SPACE - eleva el pajaro", getWidth() / 4 + getWidth() / 8, 380);
                 }
             } else {
                 //Da un mensaje mientras se carga el dibujo	
@@ -554,6 +549,14 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
             g.drawImage(won,390, 370, this);
             g.setColor(Color.white);
             g.drawString("" + score/2, 620, 410);
+            g.drawImage(restart, 285, 530, this);
+      
+            if (presionaR) {
+                vidas = 1;
+                score = 0;
+                presionaR = false;
+            }
+            
         }/*else {
             this.setBackground(Color.GRAY);
              g.drawString("    Creditos:", getWidth() / 4 + getWidth() / 8, 200);
