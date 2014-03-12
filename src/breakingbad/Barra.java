@@ -16,6 +16,7 @@ import javax.swing.ImageIcon;
  */
 public class Barra extends Base{
     private static int conteo = 0;
+    private boolean pasa;
     //private Animacion anim;
 
     //Metodo constructor que hereda los atributos de la clase ObjetoEspacial
@@ -26,6 +27,7 @@ public class Barra extends Base{
         super(posX, posY);
 //        Image jugador1 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/jugador1.gif"));
 	Image barra = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/obstaculo_600.png"));
+        pasa=false;
         /*
 	Image jugador3 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/jugador3.gif"));
         Image jugador4 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/jugador4.gif"));
@@ -65,5 +67,19 @@ public class Barra extends Base{
     //Método que actualiza la animacion
     public void actualiza(long tiempo) {
         anim.actualiza(tiempo);
+    }
+
+    /**
+     * @return the pasa
+     */
+    public boolean isPasa() {
+        return pasa;
+    }
+
+    /**
+     * @param pasa the pasa to set
+     */
+    public void setPasa(boolean pasa) {
+        this.pasa = pasa;
     }
 }

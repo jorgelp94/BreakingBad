@@ -62,6 +62,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
     private boolean activaSonido;
     private boolean presionaG;
     private boolean presionaC;
+    private boolean gameoverB;
     private boolean presionaEnter; // Al presionar enter empieza el juego
     private boolean presionaR;
     private int y;
@@ -89,6 +90,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
     private int veloc; //velocidad a la que se mueve la barra
     private int dist; //distancia entre barra y barra;
     private int pass;
+    private String name;
 
     /**
      * Metodo <I>init</I> sobrescrito de la clase
@@ -128,8 +130,10 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
         presionaG = false;
         presionaC = false;
         presionaEnter = false;
+        gameoverB=false;
         presionaR = false;
         activaSonido = true; // El sonido esta activado al iniciar el jueg
+        name="";
         //Se cargan los sonidos.
 
         bomb = new SoundClip("sounds/drop.wav");
@@ -203,7 +207,11 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
      *
      */
     public void actualiza() {
+        if(vidas==0){
+            
+            gameoverB=true;
         //Dependiendo de la direccion del elefante es hacia donde se mueve.
+        }else{
         if (!isPause() && !presionaI) {
             try {
                 if (presionaC) {
@@ -220,11 +228,11 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
             }
             if (bolaMove) {
                 //incrementar 
-                if((score/2)%500==0 && score/2 != pass){
-                    System.out.println("entro : " + dist + " "+ veloc + " " + score/2);
+                if((score)%10==0 && score != pass){
+                    System.out.println("entro : " + dist + " "+ veloc + " " + score);
                     veloc++;
                     dist -=10;
-                    pass= score/2;
+                    pass= score;
                 }
                     
                 barra.setPosX(barra.getPosX()-veloc);
@@ -247,6 +255,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
 //                barra.actualiza(tiempoTranscurrido);
                 t = t + gettP();
             }
+        }
         }
     }
 
@@ -283,7 +292,12 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
             vidas--;
             bomb.play();
         }
-        if (!isPause() && bolaMove){
+        if ((barra.getPosX()<bola.getPosX()&& (!barra.isPasa()))){
+            barra.setPasa(true);
+            score++;
+        }else if(barra3.getPosX()<bola.getPosX()&& (!barra3.isPasa()))
+        {
+            barra3.setPasa(true);
             score++;
         }
         
@@ -325,6 +339,14 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
      * @param e es el <code>evento</code> generado al presionar las teclas.
      */
     public void keyPressed(KeyEvent e) {
+        System.out.println(name);
+        if(gameoverB){
+            if(e.getKeyCode() == KeyEvent.VK_ENTER)
+                gameoverB=false;
+            else
+                System.out.println(e.getKeyChar());
+           name= name+e.getKeyChar() ;
+        }else{  
         if (e.getKeyCode() == KeyEvent.VK_P) {
             if (isPause()) {
                 setPause(false);
@@ -394,6 +416,9 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
             presionaEnter = true;
             bolaMove=false;
             presionaR = false;
+            presionaI= false;
+            gameoverB=false;
+            name="";
             activaSonido = true; // El sonido esta activado al iniciar el jueg
             dist=150;
             veloc=2;
@@ -410,6 +435,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
             t= .15;
             pass=0;
             punto=500;
+        }
         }
     }
 
@@ -504,14 +530,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
      * @param g es el <code>objeto grafico</code> usado para dibujar.
      */
     public void paint1(Graphics g) {
-        if (!presionaEnter) {
-            g.drawImage(fondo, 0, 0, 1024, 640, this);
-            g.setColor(Color.white);
-            g.drawImage(title, 260, 120, this);
-            g.setFont(new Font("defalut", Font.BOLD, 16));
-            g.drawString("Presiona ENTER para iniciar el juego",370 ,600 );
-            
-        } else {
+        
             //          g.drawImage(fondo.getImage(), 0, 0,1300,700, this);
         g.setFont(new Font("default", Font.BOLD, 16));
         g.setColor(Color.white);
@@ -529,13 +548,21 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
                 //Muestra las vidas
                 g.drawString("Vidas: " + vidas, getWidth() / 2 - 10, 80);
                 //Muestra el puntaje
-                g.drawString("Distancia: " + score/2, bola.getAncho(), 80);
+                g.drawString("Distancia: " + score, bola.getAncho(), 80);
                 if (isPause()) {
                     g.drawString(bola.getPAUSE(), bola.getPosX() + 15, bola.getPosY() + 30);
                 }
                 if (isChoca()) {
                     g.drawString(bola.getDISP(), bola.getPosX() + 15, bola.getPosY() + 30);
                     choca = false;
+                }
+                if (!presionaEnter) {
+                    g.drawImage(fondo, 0, 0, 1024, 640, this);
+                    g.setColor(Color.white);
+                    g.drawImage(title, 260, 120, this);
+                    g.setFont(new Font("defalut", Font.BOLD, 16));
+                    g.drawString("Presiona ENTER para iniciar el juego",370 ,600 );
+
                 }
                 if (presionaI) {
 
@@ -568,11 +595,11 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
             g.drawImage(gameover, 350, 120, this);
             g.drawImage(won,390, 370, this);
             g.setColor(Color.white);
-            g.drawString("" + score/2, 620, 410);
+            g.drawString("" + score, 620, 410);
             g.drawImage(restart, 285, 530, this);
         }
         
-       }
+       
 
     }
 
