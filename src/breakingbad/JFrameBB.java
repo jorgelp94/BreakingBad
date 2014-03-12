@@ -91,6 +91,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
     private int dist; //distancia entre barra y barra;
     private int pass;
     private String name;
+    private boolean kreal;
 
     /**
      * Metodo <I>init</I> sobrescrito de la clase
@@ -105,7 +106,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setPause(false);
         vidas = 1;    // Le asignamos un valor inicial a las vidas
-        bola = new Bola(getWidth()/5, getHeight()/2);
+        bola = new Bola(getWidth()/2, getHeight()/2);
         URL tURL = this.getClass().getResource("images/back.jpeg");
         //URL tURL2 = this.getClass().getResource("images/wallpaper_inicio");
         URL tURL3 = this.getClass().getResource("images/score.png");
@@ -131,6 +132,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
         presionaC = false;
         presionaEnter = false;
         gameoverB=false;
+        kreal=true;
         presionaR = false;
         activaSonido = true; // El sonido esta activado al iniciar el jueg
         name="";
@@ -143,12 +145,12 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
         veloc=2;
         y = (int) (Math.random() * (4*(getHeight()/5) - 100)) + 100; //85 a 112
         
-        barra = new Barra(getWidth(), y-600);
-        barra2= new Barra(getWidth(),y+dist);
+        barra = new Barra(0, y-600);
+        barra2= new Barra(0,y+dist);
         y2 = (int) (Math.random() * (4*(getHeight()/5) - 100)) + 100; //85 a 112
         
-        barra3 = new Barra(getWidth()+561, y2-600);
-        barra4= new Barra(getWidth()+561,y2+dist);
+        barra3 = new Barra(-561, y2-600);
+        barra4= new Barra(-561,y2+dist);
         velocI= 30;
         tP= .1;
         t= .15;
@@ -235,10 +237,10 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
                     pass= score;
                 }
                     
-                barra.setPosX(barra.getPosX()-veloc);
-                barra2.setPosX(barra2.getPosX()-veloc);
-                barra3.setPosX(barra3.getPosX()-veloc);
-                barra4.setPosX(barra4.getPosX()-veloc);
+                barra.setPosX(barra.getPosX()+veloc);
+                barra2.setPosX(barra2.getPosX()+veloc);
+                barra3.setPosX(barra3.getPosX()+veloc);
+                barra4.setPosX(barra4.getPosX()+veloc);
                 //Guarda el tiempo actual
                 long tiempoTranscurrido =
                         System.currentTimeMillis() - getTiempoActual();
@@ -247,10 +249,12 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
                 setCos(Math.cos(getAnguloRadianes()));
                 setSin(Math.sin(getAnguloRadianes()));
 //                int x = (int) (velocI * getCos() * t);
+                if(kreal){
                 int y = (int) ((velocI * sin * t) - (.5 * gravedad * t * t));
 //                bola.setPosX(x);
 //                System.out.println(barra.getPosY() + " " +barra.getAlto() + " "+ this.y);
                 bola.setPosY(-y + getPunto());
+                }
                 bola.actualiza(tiempoTranscurrido);
 //                barra.actualiza(tiempoTranscurrido);
                 t = t + gettP();
@@ -276,15 +280,15 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
         
 
         //checa que la barra este dentro del applet
-        if(barra.getPosX()<-97){
+        if(barra.getPosX()>this.getWidth()+97){
             y = (int) (Math.random() * (4*(getHeight()/5) - 20)) + 20; //85 a 112
-            barra = new Barra(getWidth(),y-600);
-            barra2= new Barra(getWidth(), y+dist);
+            barra = new Barra(0,y-600);
+            barra2= new Barra(0, y+dist);
         }
-        if(barra3.getPosX()<-97){
+        if(barra3.getPosX()>this.getWidth()+97){
             y2 = (int) (Math.random() * (4*(getHeight()/5) - 100)) + 100; //85 a 112
-            barra3 = new Barra(getWidth(), y2-600);
-            barra4= new Barra(getWidth(),y2+dist);
+            barra3 = new Barra(0, y2-600);
+            barra4= new Barra(0,y2+dist);
             
         }
         
@@ -300,7 +304,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
             barra3.setPasa(true);
             score++;
         }
-        
+        if(vidas==0) gameoverB=true;
 
     }
 
@@ -341,6 +345,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
     public void keyPressed(KeyEvent e) {
         System.out.println(name);
         if(gameoverB){
+            System.out.println("entro");
             if(e.getKeyCode() == KeyEvent.VK_ENTER)
                 gameoverB=false;
             else
@@ -357,6 +362,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
         
         // Tecla para que la bola se mueva
         if(e.getKeyCode()== KeyEvent.VK_SPACE && presionaEnter){
+            kreal=false;
             setBolaMove(true);
             t=.15;
             setPunto(bola.getPosY());
@@ -418,6 +424,8 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
             presionaR = false;
             presionaI= false;
             gameoverB=false;
+            
+        kreal=true;
             name="";
             activaSonido = true; // El sonido esta activado al iniciar el jueg
             dist=150;
@@ -460,6 +468,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
      * @param e es el <code>evento</code> que se genera en al soltar las teclas.
      */
     public void keyReleased(KeyEvent e) {
+        kreal=true;;
         fuerza=0;
     }
 
@@ -472,9 +481,13 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
      * click.
      */
     public void mousePressed(MouseEvent e) {
-        //if (bola.getPerimetro().contains(e.getPoint())) {
-         //   setBolaMove(true);
-        //}
+            kreal=false;
+            setBolaMove(true);
+            t=.15;
+            setPunto(bola.getPosY());
+            if (vidas > 0) {
+                point.play();
+            }
     }
 
     /**
@@ -486,6 +499,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
      * click.
      */
     public void mouseReleased(MouseEvent e) {
+        kreal=true;
     }
 
     /**
@@ -519,6 +533,12 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
      * click.
      */
     public void mouseClicked(MouseEvent e) {
+        setBolaMove(true);
+            t=.15;
+            setPunto(bola.getPosY());
+            if (vidas > 0) {
+                point.play();
+            }
     }
 
     /**
