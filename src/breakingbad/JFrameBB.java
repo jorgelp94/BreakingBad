@@ -88,6 +88,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
     private int fuerza;
     private int veloc; //velocidad a la que se mueve la barra
     private int dist; //distancia entre barra y barra;
+    private int pass;
 
     /**
      * Metodo <I>init</I> sobrescrito de la clase
@@ -147,6 +148,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
         velocI= 30;
         tP= .1;
         t= .15;
+        pass=0;
         punto=500;
         start();
     }
@@ -218,9 +220,11 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
             }
             if (bolaMove) {
                 //incrementar 
-                if((score/2)%500==0){
-//                    veloc++;
+                if((score/2)%500==0 && score/2 != pass){
+                    System.out.println("entro : " + dist + " "+ veloc + " " + score/2);
+                    veloc++;
                     dist -=10;
+                    pass= score/2;
                 }
                     
                 barra.setPosX(barra.getPosX()-veloc);
@@ -237,7 +241,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
 //                int x = (int) (velocI * getCos() * t);
                 int y = (int) ((velocI * sin * t) - (.5 * gravedad * t * t));
 //                bola.setPosX(x);
-                System.out.println(barra.getPosY() + " " +barra.getAlto() + " "+ this.y);
+//                System.out.println(barra.getPosY() + " " +barra.getAlto() + " "+ this.y);
                 bola.setPosY(-y + getPunto());
                 bola.actualiza(tiempoTranscurrido);
 //                barra.actualiza(tiempoTranscurrido);
@@ -404,6 +408,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
             velocI= 30;
             tP= .1;
             t= .15;
+            pass=0;
             punto=500;
         }
     }
