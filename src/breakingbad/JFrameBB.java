@@ -205,6 +205,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
     public void actualiza() {
         //Dependiendo de la direccion del elefante es hacia donde se mueve.
         if (!isPause() && !presionaI) {
+
             try {
                 if (presionaC) {
                     leeArchivo();    //lee el contenido del archivo 
@@ -515,7 +516,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
             //          g.drawImage(fondo.getImage(), 0, 0,1300,700, this);
         g.setFont(new Font("default", Font.BOLD, 16));
         g.setColor(Color.white);
-        if (vidas > 0) {
+        if (vidas >= 0) {
             if (bola != null) {
                 g.drawImage(fondo, 0, 0, 1024, 640, this);
                 //Dibuja la imagen en la posicion actualizada
@@ -557,6 +558,20 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
                     g.drawString("S - activa/desactiva el sonido del juego", getWidth() / 4 + getWidth() / 8, 360);
                     g.drawString("SPACE - eleva el pajaro", getWidth() / 4 + getWidth() / 8, 380);
                    
+                }
+                if (vidas == 0) {
+                    g.drawImage(fondo, 0,0, 1024, 640, this);
+                    g.setFont(new Font("Helvetica", Font.BOLD, 40));
+                    g.drawImage(gameover, 350, 120, this);
+                    g.drawImage(won,390, 370, this);
+                    g.setColor(Color.white);
+                    g.drawString("" + score/2, 620, 410);
+                    g.drawImage(restart, 285, 530, this);
+                    if (presionaR) {
+                        vidas = 1;
+                        score = 0;
+                        presionaR = false;
+                    }
                 }
             } else {
                 //Da un mensaje mientras se carga el dibujo	
@@ -779,12 +794,18 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
             bola.setPosX(Integer.parseInt(arr[3]));
             barra.setPosX(Integer.parseInt(arr[4]));
             barra.setPosY(Integer.parseInt(arr[5]));
+            barra2.setPosX(Integer.parseInt(arr[6]));
+            barra2.setPosY(Integer.parseInt(arr[7]));
+            barra3.setPosX(Integer.parseInt(arr[8]));
+            barra3.setPosY(Integer.parseInt(arr[9]));
+            barra4.setPosX(Integer.parseInt(arr[10]));
+            barra4.setPosY(Integer.parseInt(arr[11]));
             bolaMove = true;
-            gravedad = (Double.parseDouble(arr[7]));
-            angulo = (Double.parseDouble(arr[8]));
-            y = (Integer.parseInt(arr[9]));
-            t = (Double.parseDouble(arr[10]));
-            activaSonido = (Boolean.parseBoolean(arr[12]));
+            gravedad = (Double.parseDouble(arr[13]));
+            angulo = (Double.parseDouble(arr[14]));
+            y = (Integer.parseInt(arr[15]));
+            t = (Double.parseDouble(arr[16]));
+            //activaSonido = (Boolean.parseBoolean(arr[12]));
             fileIn.close();
             actualiza();
         } catch (IOException ioe) {
@@ -804,7 +825,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
         try {
             PrintWriter fileOut = new PrintWriter(new FileWriter(nombreArchivo));
 
-            fileOut.println("" + score + "," + vidas + "," + bola.getPosX() + "," + bola.getPosY() + "," + barra.getPosX() + "," + barra.getPosY() + "," + bolaMove + "," + gravedad + "," + angulo + "," + y + "," + t + "," + activaSonido);
+            fileOut.println("" + 0 + "," + 1 + "," + getWidth()/5 + "," +  getHeight()/2 + "," + getWidth() + "," + (y-600) + "," + getWidth() + "," + (y+dist) + "," + (getWidth()+700) + "," + (y2-600) + "," + (getWidth()+700) + "," + (y2+dist) + "," + false + "," + gravedad + "," + angulo + "," + y + "," + t + "," + activaSonido);
 
             fileOut.close();
         } catch (IOException ioe) {
