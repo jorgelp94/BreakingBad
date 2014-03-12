@@ -548,7 +548,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
         setBolaMove(true);
             t=.15;
             setPunto(bola.getPosY());
-            if (vidas > 0) {
+            if (vidas > 0 && activaSonido) {
                 point.play();
             }
     }
@@ -594,7 +594,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
                     g.drawImage(title, 260, 120, this);
                     g.setFont(new Font("defalut", Font.BOLD, 16));
                     //g.drawString("Presiona ENTER para iniciar el juego",370 ,600 );
-                    g.drawImage(enter, 370, 600, this);
+                    g.drawImage(enter, 325, 580, this);
 
                 }
                 if (presionaI) {
@@ -629,7 +629,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
             g.drawImage(won,390, 370, this);
             g.setColor(Color.white);
             g.drawString("" + score, 620, 410);
-            g.drawImage(restart, 285, 530, this);
+            g.drawImage(restart, 120, 550, this);
         }
         
        
