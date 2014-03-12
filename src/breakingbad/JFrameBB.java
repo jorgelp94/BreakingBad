@@ -277,8 +277,15 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
             if (activaSonido) {
                 bomb.play();
             }
-            vidas--;// se resta una vida cuando el bola cae
+            vidas--;// se resta una vida cuando el pajaro cae
                 
+        }
+        if (bola.getPosY() <= 0) {
+            bolaMove = false;
+            if (activaSonido) {
+                bomb.play();
+            }
+            vidas--;// se resta una vida cuando el pajaro toca la parte de arriba
         }
         
 
