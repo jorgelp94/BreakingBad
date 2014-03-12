@@ -297,7 +297,9 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
         
         if (barra.intersecta(bola) || barra2.intersecta(bola) || barra3.intersecta(bola) || barra4.intersecta(bola)) {
             vidas--;
-            bomb.play();
+            if (activaSonido) {
+                bomb.play();
+            }
         }
         if ((barra.getPosX()<bola.getPosX()&& (!barra.isPasa()))){
             barra.setPasa(true);
@@ -369,7 +371,7 @@ public class JFrameBB extends JFrame implements Runnable, KeyListener, MouseList
             setBolaMove(true);
             t=.15;
             setPunto(bola.getPosY());
-            if (vidas > 0) {
+            if (vidas > 0 && activaSonido) {
                 point.play();
             }
         }
